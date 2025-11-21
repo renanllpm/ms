@@ -2,12 +2,14 @@
 
 use App\Livewire\User\Profile;
 use App\Livewire\PublicBet;
+use App\Livewire\CheckBet;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users\Index;
 
 // Página pública de apostas (sem autenticação)
 Route::get('/', PublicBet::class)->name('public.bet');
 Route::get('/apostar', PublicBet::class)->name('bet');
+Route::get('/consultar', CheckBet::class)->name('check.bet');
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');

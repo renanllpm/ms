@@ -55,10 +55,20 @@
                         </div>
                     </div>
 
-                    <button wire:click="newBet"
-                        class="megasena-gradient w-full transform rounded-xl px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-xl md:w-auto">
-                        Fazer Nova Aposta
-                    </button>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button wire:click="newBet"
+                            class="megasena-gradient transform rounded-xl px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-xl">
+                            Fazer Nova Aposta
+                        </button>
+                        
+                        <a href="{{ route('check.bet') }}"
+                            class="inline-flex items-center justify-center gap-2 transform rounded-xl px-8 py-4 font-semibold text-green-700 bg-green-50 border-2 border-green-200 transition-all hover:scale-105 hover:bg-green-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Consultar Aposta
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,20 +77,31 @@
         <div class="min-h-screen bg-gray-50">
             <!-- Header -->
             <div class="megasena-gradient px-4 py-8 text-white md:py-12">
-                <div class="mx-auto max-w-4xl text-center">
-                    <h1 class="mb-3 text-4xl font-bold tracking-tight md:text-6xl">
-                        🍀 Mega-Sena
-                    </h1>
-                    <p class="text-lg text-green-100 md:text-xl">
-                        Faça sua aposta e concorra ao prêmio!
-                    </p>
+                <div class="mx-auto max-w-4xl">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex-1 text-center">
+                            <h1 class="mb-3 text-4xl font-bold tracking-tight md:text-6xl">
+                                🍀 Mega-Sena - Operações
+                            </h1>
+                            <p class="text-lg text-green-100 md:text-xl">
+                                Vote em seus números da sorte e participe do sorteio!
+                            </p>
+                        </div>
+                        <a href="{{ route('check.bet') }}" 
+                            class="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-white font-semibold transition-all backdrop-blur-sm border border-white/30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Consultar
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- Conteúdo Principal -->
             <div class="mx-auto -mt-8 max-w-4xl px-4">
                 <div class="rounded-3xl bg-white p-6 shadow-2xl md:p-10">
-
+                    Os números mais votados serão apostados.
                     <!-- Números Selecionados (Preview Top) -->
                     @if (count($selectedNumbers) > 0)
                         <div class="mb-8">

@@ -1,0 +1,245 @@
+<div class="flex min-h-screen items-center justify-center p-4">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+    <div class="w-full max-w-2xl">
+        <!-- Header -->
+        <div class="mb-8 text-center">
+            <h1
+                class="mb-2 bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-4xl font-bold text-transparent md:text-5xl">
+                Consultar Aposta
+            </h1>
+            <p class="text-gray-600">Digite seu código de acesso para verificar seus números</p>
+        </div>
+
+        <!-- Formulário de Busca -->
+        <div class="mb-6 rounded-3xl bg-white p-8 shadow-2xl">
+            <form wire:submit="search" class="space-y-6">
+                <div>
+                    <label for="accessCode" class="mb-2 block text-sm font-semibold text-gray-700">
+                        Código de Acesso
+                    </label>
+                    <input type="text" id="accessCode" wire:model="accessCode" placeholder="Ex: ABC12345"
+                        maxlength="8"
+                        class="w-full rounded-2xl border-2 border-gray-200 px-6 py-4 text-center font-mono text-lg font-bold uppercase tracking-widest transition-all focus:border-green-500 focus:ring-4 focus:ring-green-100">
+                    @error('accessCode')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="submit"
+                        class="flex-1 transform rounded-2xl bg-gradient-to-r from-green-600 to-green-700 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:from-green-700 hover:to-green-800 hover:shadow-xl">
+                        Consultar
+                    </button>
+
+                    @if ($searched)
+                        <button type="button" wire:click="clear"
+                            class="rounded-2xl bg-gray-100 px-6 font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-200">
+                            Limpar
+                        </button>
+                    @endif
+                </div>
+            </form>
+        </div>
+
+        <!-- Resultado -->
+        @if ($searched && $participant)
+            <div class="animate-fadeIn space-y-6 rounded-3xl bg-white p-8 shadow-2xl">
+                <!-- Status de Pagamento -->
+                <div class="flex items-center justify-between border-b border-gray-200 pb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">{{ $participant->name }}</h2>
+                        <p class="mt-1 text-sm text-gray-500">Código: {{ $participant->access_code }}</p>
+                    </div>
+                    <div class="text-right">
+                        @if ($participant->paid)
+                            <span
+                                class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 font-semibold text-green-800">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Pago
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex items-center gap-2 rounded-full bg-yellow-100 px-4 py-2 font-semibold text-yellow-800">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Pendente
+                            </span>
+                        @endif
+                        <p class="mt-2 text-2xl font-bold text-green-600">
+                            R$ {{ number_format($participant->amount, 2, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Números Escolhidos -->
+                <div>
+                    <h3 class="mb-4 text-lg font-semibold text-gray-700">Seus números da sorte:</h3>
+                    <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
+                        @foreach ($participant->sorted_numbers as $number)
+                            @php
+                                $isPopular = in_array($number, $matchingNumbers);
+                            @endphp
+                            <div class="relative flex aspect-square transform items-center justify-center rounded-2xl {{ $isPopular ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-4 ring-yellow-200' : 'bg-gradient-to-br from-green-500 to-green-600' }} text-2xl font-bold text-white shadow-lg transition-transform hover:scale-105">
+                                {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                @if($isPopular)
+                                    <div class="absolute -top-2 -right-2 bg-yellow-500 rounded-full p-1">
+                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                    @if(count($matchingNumbers) > 0)
+                        <div class="mt-4 rounded-xl bg-yellow-50 border-2 border-yellow-200 p-4">
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-yellow-800">
+                                        🎯 Você acertou {{ count($matchingNumbers) }} {{ count($matchingNumbers) == 1 ? 'número' : 'números' }} dos mais populares!
+                                    </p>
+                                    <p class="text-xs text-yellow-700 mt-1">
+                                        Os números destacados em dourado estão entre os 10 mais escolhidos por todos os participantes.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Números Mais Escolhidos -->
+                @if(count($mostChosenNumbers) > 0)
+                    <div class="border-t border-gray-200 pt-6">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-700 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            Top 10 - Números mais escolhidos
+                        </h3>
+                        <div class="grid grid-cols-5 gap-3 sm:grid-cols-10">
+                            @foreach($mostChosenNumbers as $number => $count)
+                                @php
+                                    $userHasThis = in_array($number, $participant->numbers);
+                                @endphp
+                                <div class="relative">
+                                    <div class="flex aspect-square items-center justify-center rounded-xl {{ $userHasThis ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-2 ring-yellow-300' : 'bg-gradient-to-br from-gray-100 to-gray-200' }} text-lg font-bold {{ $userHasThis ? 'text-white' : 'text-gray-700' }} shadow">
+                                        {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                    </div>
+                                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        {{ $count }}x
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 text-center">
+                            Quantidade de vezes que cada número foi escolhido por todos os participantes
+                        </p>
+                    </div>
+                @endif
+
+                <!-- Informações Adicionais -->
+                <div class="space-y-2 rounded-2xl bg-gray-50 p-6 text-sm text-gray-600">
+                    @if ($participant->email)
+                        <div class="flex items-center gap-2">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>{{ $participant->email }}</span>
+                        </div>
+                    @endif
+
+                    @if ($participant->phone)
+                        <div class="flex items-center gap-2">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span>{{ $participant->formatted_phone }}</span>
+                        </div>
+                    @endif
+
+                    <div class="flex items-center gap-2">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Registrado em: {{ $participant->created_at->format('d/m/Y H:i') }}</span>
+                    </div>
+
+                    @if ($participant->paid && $participant->paid_at)
+                        <div class="flex items-center gap-2 text-green-600">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="font-semibold">Pago em: {{ $participant->paid_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Mensagem de Boa Sorte -->
+                <div class="pt-4 text-center">
+                    <p
+                        class="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-lg font-semibold text-transparent">
+                        🍀 Boa sorte no sorteio! 🍀
+                    </p>
+                </div>
+            </div>
+        @elseif($searched && !$participant)
+            <div class="animate-fadeIn rounded-3xl bg-white p-8 text-center shadow-2xl">
+                <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
+                    <svg class="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-gray-800">Código não encontrado</h3>
+                <p class="text-gray-600">
+                    Verifique se digitou o código corretamente ou entre em contato com o organizador.
+                </p>
+            </div>
+        @endif
+
+        <!-- Botão Voltar -->
+        <div class="mt-8 text-center">
+            <a href="/"
+                class="inline-flex items-center gap-2 font-semibold text-green-600 transition-colors hover:text-green-700">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Voltar para página inicial
+            </a>
+        </div>
+    </div>
+</div>
