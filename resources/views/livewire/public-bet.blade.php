@@ -185,7 +185,7 @@
                         <h3 class="mb-6 text-lg font-bold text-gray-800">Seus Dados</h3>
                         <div>
                             <label class="mb-2 block text-sm font-medium text-gray-700">Nome Completo *</label>
-                            <input type="text" wire:model="name" placeholder="Digite seu nome completo"
+                            <input type="text" wire:model.live="name" placeholder="Digite seu nome completo"
                                 class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
                             @error('name')
                                 <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
@@ -265,11 +265,11 @@
     @endif
 
     <!-- Loading Overlay -->
-    <div wire:loading class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    {{-- <div wire:loading class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
         <div class="rounded-2xl bg-white p-8 text-center shadow-2xl">
             <div class="mb-4 inline-block h-16 w-16 animate-spin rounded-full border-b-4 border-t-4 border-green-600">
             </div>
             <p class="text-lg font-semibold text-gray-700">Processando...</p>
         </div>
-    </div>
+    </div> --}}
 </div>
