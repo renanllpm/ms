@@ -103,14 +103,15 @@
             <!-- Conteúdo Principal -->
             <div class="mx-auto -mt-8 max-w-4xl px-4">
                 <div class="rounded-3xl bg-white p-6 shadow-2xl md:p-10">
-                    <div class="space-y-3 mb-6">
-                        <div class="rounded-xl bg-blue-50 border-2 border-blue-200 p-4">
-                            <p class="text-sm text-blue-800 font-semibold text-center">
-                                ℹ️ Este é um sistema de votação colaborativa. Vote nos números que você acha que o grupo deve jogar na Mega-Sena!
+                    <div class="mb-6 space-y-3">
+                        <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
+                            <p class="text-center text-sm font-semibold text-blue-800">
+                                ℹ️ Este é um sistema de votação colaborativa. Vote nos números que você acha que o grupo
+                                deve jogar na Mega-Sena!
                             </p>
                         </div>
-                        <div class="rounded-xl bg-green-50 border-2 border-green-200 p-4">
-                            <p class="text-sm text-green-800 font-semibold text-center">
+                        <div class="rounded-xl border-2 border-green-200 bg-green-50 p-4">
+                            <p class="text-center text-sm font-semibold text-green-800">
                                 ✓ Você pode votar sem enviar comprovante! O envio é opcional e pode ser feito depois.
                             </p>
                         </div>
@@ -197,15 +198,16 @@
 
                         <!-- Upload de Comprovante -->
                         <div class="mb-8">
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="mb-4 flex items-center justify-between">
                                 <h3 class="text-lg font-bold text-gray-800">Comprovante de Contribuição</h3>
-                                <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+                                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600">
                                     Opcional
                                 </span>
                             </div>
-                            <div class="rounded-xl bg-blue-50 border-2 border-blue-200 p-4 mb-4">
+                            <div class="mb-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
                                 <p class="text-sm text-blue-800">
-                                    ℹ️ Você pode enviar o comprovante agora ou depois. O envio não é obrigatório para votar.
+                                    ℹ️ Você pode enviar o comprovante agora ou depois. O envio não é obrigatório para
+                                    votar.
                                 </p>
                             </div>
                             <div
@@ -245,9 +247,9 @@
                             Selecione mais {{ $this->numbersToPickProperty - count($selectedNumbers) }} número(s)
                         </p>
                     @endif
-                    
+
                     @if (count($selectedNumbers) === $this->numbersToPickProperty)
-                        <p class="mt-4 text-center text-sm text-green-600 font-medium">
+                        <p class="mt-4 text-center text-sm font-medium text-green-600">
                             ✓ Você pode votar agora! O comprovante é opcional.
                         </p>
                     @endif

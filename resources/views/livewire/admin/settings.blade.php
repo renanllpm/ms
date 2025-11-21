@@ -36,8 +36,8 @@
 
             <!-- Contribuição por Pessoa -->
             <div>
-                <x-input label="Contribuição por Pessoa (R$)" wire:model="defaultBetAmount" type="number" step="0.01"
-                    min="0.01" prefix="R$" hint="Valor da contribuição individual para o bolão" />
+                <x-input label="Contribuição por Pessoa (R$)" wire:model="defaultBetAmount" type="number"
+                    step="0.01" min="0.01" prefix="R$" hint="Valor da contribuição individual para o bolão" />
             </div>
 
             <!-- Preview -->
@@ -49,7 +49,8 @@
                         de <strong>{{ $minNumberProperty }}</strong> até <strong>{{ $maxNumberProperty }}</strong>
                     </p>
                     <p class="text-sm">
-                        • Cada participante contribuirá com <strong>R$ {{ number_format($defaultBetAmount, 2, ',', '.') }}</strong>
+                        • Cada participante contribuirá com <strong>R$
+                            {{ number_format($defaultBetAmount, 2, ',', '.') }}</strong>
                     </p>
                     <p class="text-sm">
                         • Total de números disponíveis:

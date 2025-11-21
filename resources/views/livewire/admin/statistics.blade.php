@@ -181,31 +181,44 @@
                 </div>
             </div>
 
-            <!-- Últimas Escolhas -->
+            <!-- Últimos Votos -->
             <div>
                 <h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-200">
-                    <span>🕐</span> Últimas 5 Escolhas
+                    <span>🕐</span> Últimos 5 Votos
                 </h3>
                 <div class="space-y-3">
-                    @foreach ($recentChoices as $choice)
+                    @foreach ($recentVotes as $vote)
                         <div
                             class="rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:bg-gray-800">
                             <div class="mb-2 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div
                                         class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-sm font-bold text-white">
-                                        {{ strtoupper(substr($choice->user->name, 0, 2)) }}
+                                        {{ strtoupper(substr($vote->name, 0, 2)) }}
                                     </div>
                                     <div>
                                         <div class="font-semibold text-gray-800 dark:text-gray-200">
-                                            {{ $choice->user->name }}</div>
+                                            {{ $vote->name }}</div>
                                         <div class="text-xs text-gray-600 dark:text-gray-400">
-                                            {{ $choice->created_at->diffForHumans() }}</div>
+                                            {{ $vote->created_at->diffForHumans() }}</div>
                                     </div>
+                                </div>
+                                <div class="text-right">
+                                    @if ($vote->paid)
+                                        <span
+                                            class="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-600">
+                                            ✓ Contribuiu
+                                        </span>
+                                    @else
+                                        <span
+                                            class="rounded-full bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-600">
+                                            A Contribuir
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="mt-3 flex flex-wrap gap-2">
-                                @foreach ($choice->sorted_numbers as $number)
+                                @foreach ($vote->sorted_numbers as $number)
                                     <div
                                         class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 text-sm font-bold text-white shadow">
                                         {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}

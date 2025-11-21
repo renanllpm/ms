@@ -222,7 +222,7 @@
                         class="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-lg font-semibold text-transparent">
                         🍀 Obrigado por participar da votação! 🍀
                     </p>
-                    <p class="text-sm text-gray-600 mt-2">
+                    <p class="mt-2 text-sm text-gray-600">
                         Os números mais votados pelo grupo serão jogados
                     </p>
                 </div>
