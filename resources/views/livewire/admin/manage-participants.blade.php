@@ -66,7 +66,7 @@
                                 Números</th>
                             <th
                                 class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                                Valor</th>
+                                Contribuição</th>
                             <th
                                 class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                                 Status</th>

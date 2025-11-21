@@ -34,10 +34,10 @@
                 </div>
             </div>
 
-            <!-- Valor da Aposta -->
+            <!-- Contribuição por Pessoa -->
             <div>
-                <x-input label="Valor da Aposta (R$)" wire:model="defaultBetAmount" type="number" step="0.01"
-                    min="0.01" prefix="R$" hint="Valor que será cobrado por cada aposta" />
+                <x-input label="Contribuição por Pessoa (R$)" wire:model="defaultBetAmount" type="number" step="0.01"
+                    min="0.01" prefix="R$" hint="Valor da contribuição individual para o bolão" />
             </div>
 
             <!-- Preview -->
@@ -49,7 +49,7 @@
                         de <strong>{{ $minNumberProperty }}</strong> até <strong>{{ $maxNumberProperty }}</strong>
                     </p>
                     <p class="text-sm">
-                        • Cada aposta custará <strong>R$ {{ number_format($defaultBetAmount, 2, ',', '.') }}</strong>
+                        • Cada participante contribuirá com <strong>R$ {{ number_format($defaultBetAmount, 2, ',', '.') }}</strong>
                     </p>
                     <p class="text-sm">
                         • Total de números disponíveis:
@@ -76,8 +76,8 @@
     <x-card title="ℹ️ Informações Importantes" class="max-w-2xl">
         <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>• As configurações são salvas no <strong>banco de dados</strong></p>
-            <p>• Alterar essas configurações afeta todas as novas apostas</p>
-            <p>• Apostas já realizadas não serão modificadas</p>
+            <p>• Alterar essas configurações afeta todos os novos votos</p>
+            <p>• Votos já realizados não serão modificados</p>
             <p>• As configurações são cacheadas por 1 hora para melhor performance</p>
         </div>
     </x-card>

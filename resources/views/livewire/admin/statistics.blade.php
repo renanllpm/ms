@@ -1,34 +1,34 @@
 <div>
-    <x-card title="📊 Estatísticas Administrativas - Mega-Sena">
+    <x-card title="📊 Estatísticas da Votação - Mega-Sena">
         <x-slot name="action">
             <div class="flex items-center gap-3">
-                <x-badge color="blue" :text="$totalChoices . ' escolha(s)'" round lg />
+                <x-badge color="blue" :text="$totalVotes . ' voto(s)'" round lg />
                 <x-button wire:click="refresh" color="slate" icon="arrow-path" sm>
                     Atualizar
                 </x-button>
             </div>
         </x-slot>
 
-        @if ($totalChoices === 0)
+        @if ($totalVotes === 0)
             <div class="py-12 text-center">
                 <div class="mb-4 text-6xl">📊</div>
                 <p class="text-lg text-gray-600 dark:text-gray-400">
-                    Nenhuma escolha registrada ainda. Aguardando participantes...
+                    Nenhum voto registrado ainda. Aguardando participantes...
                 </p>
             </div>
         @else
             <!-- Resumo Geral -->
             <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
                 <div class="rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg">
-                    <div class="mb-1 text-sm font-semibold opacity-90">Total de Escolhas</div>
-                    <div class="text-4xl font-bold">{{ $totalChoices }}</div>
+                    <div class="mb-1 text-sm font-semibold opacity-90">Total de Votos</div>
+                    <div class="text-4xl font-bold">{{ $totalVotes }}</div>
                 </div>
                 <div class="rounded-lg bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-lg">
-                    <div class="mb-1 text-sm font-semibold opacity-90">Números Escolhidos</div>
+                    <div class="mb-1 text-sm font-semibold opacity-90">Números Votados</div>
                     <div class="text-4xl font-bold">{{ $totalNumbers }}</div>
                 </div>
                 <div class="rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg">
-                    <div class="mb-1 text-sm font-semibold opacity-90">Média por Escolha</div>
+                    <div class="mb-1 text-sm font-semibold opacity-90">Média por Voto</div>
                     <div class="text-4xl font-bold">6</div>
                 </div>
                 <div class="rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg">
@@ -40,7 +40,7 @@
             <!-- Top 10 Números Mais Escolhidos -->
             <div class="mb-8">
                 <h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-200">
-                    <span>🔥</span> Top 10 - Números Mais Escolhidos
+                    <span>🔥</span> Top 10 - Números Mais Votados
                 </h3>
                 <div
                     class="rounded-lg bg-gradient-to-r from-red-50 to-orange-50 p-6 dark:from-red-900/20 dark:to-orange-900/20">
@@ -79,7 +79,7 @@
             <!-- Top 10 Números Menos Escolhidos -->
             <div class="mb-8">
                 <h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-200">
-                    <span>❄️</span> Top 10 - Números Menos Escolhidos
+                    <span>❄️</span> Top 10 - Números Menos Votados
                 </h3>
                 <div
                     class="rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 p-6 dark:from-blue-900/20 dark:to-cyan-900/20">

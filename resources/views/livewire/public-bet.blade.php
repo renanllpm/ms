@@ -17,26 +17,26 @@
                     </div>
 
                     <h2 class="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
-                        Aposta Confirmada!
+                        Voto Registrado!
                     </h2>
                     <p class="mb-8 text-gray-600">
-                        Sua aposta foi registrada com sucesso
+                        Seu voto foi registrado com sucesso. Os números mais votados serão jogados pelo grupo!
                     </p>
 
                     <!-- Código de Acesso -->
                     <div class="mb-8 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 p-6 md:p-8">
-                        <p class="mb-3 text-sm text-gray-600">Seu código de acesso:</p>
+                        <p class="mb-3 text-sm text-gray-600">Seu código de consulta:</p>
                         <div class="mb-4 font-mono text-4xl font-bold tracking-widest text-green-700 md:text-5xl">
                             {{ $accessCode }}
                         </div>
                         <p class="text-xs text-gray-500 md:text-sm">
-                            ⚠️ Guarde este código para consultar sua aposta
+                            ⚠️ Guarde este código para consultar seu voto e ver os números mais votados
                         </p>
                     </div>
 
                     <!-- Números Escolhidos -->
                     <div class="mb-8">
-                        <p class="mb-4 text-sm font-semibold text-gray-700">Seus Números da Sorte:</p>
+                        <p class="mb-4 text-sm font-semibold text-gray-700">Seus Números Votados:</p>
                         <div class="flex flex-wrap justify-center gap-3">
                             @foreach ($selectedNumbers as $number)
                                 <div
@@ -55,16 +55,17 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <div class="flex flex-col justify-center gap-4 sm:flex-row">
                         <button wire:click="newBet"
                             class="megasena-gradient transform rounded-xl px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-xl">
                             Fazer Nova Aposta
                         </button>
-                        
+
                         <a href="{{ route('check.bet') }}"
-                            class="inline-flex items-center justify-center gap-2 transform rounded-xl px-8 py-4 font-semibold text-green-700 bg-green-50 border-2 border-green-200 transition-all hover:scale-105 hover:bg-green-100">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            class="inline-flex transform items-center justify-center gap-2 rounded-xl border-2 border-green-200 bg-green-50 px-8 py-4 font-semibold text-green-700 transition-all hover:scale-105 hover:bg-green-100">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             Consultar Aposta
                         </a>
@@ -78,19 +79,20 @@
             <!-- Header -->
             <div class="megasena-gradient px-4 py-8 text-white md:py-12">
                 <div class="mx-auto max-w-4xl">
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="mb-6 flex items-center justify-between">
                         <div class="flex-1 text-center">
                             <h1 class="mb-3 text-4xl font-bold tracking-tight md:text-6xl">
-                                🍀 Mega-Sena - Operações
+                                🍀 Votação Mega-Sena
                             </h1>
                             <p class="text-lg text-green-100 md:text-xl">
-                                Vote em seus números da sorte e participe do sorteio!
+                                Vote nos números que o grupo deve jogar!
                             </p>
                         </div>
-                        <a href="{{ route('check.bet') }}" 
-                            class="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-white font-semibold transition-all backdrop-blur-sm border border-white/30">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <a href="{{ route('check.bet') }}"
+                            class="hidden items-center gap-2 rounded-xl border border-white/30 bg-white/20 px-4 py-2 font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/30 sm:flex">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             Consultar
                         </a>
@@ -101,13 +103,24 @@
             <!-- Conteúdo Principal -->
             <div class="mx-auto -mt-8 max-w-4xl px-4">
                 <div class="rounded-3xl bg-white p-6 shadow-2xl md:p-10">
-                    Os números mais votados serão apostados.
+                    <div class="space-y-3 mb-6">
+                        <div class="rounded-xl bg-blue-50 border-2 border-blue-200 p-4">
+                            <p class="text-sm text-blue-800 font-semibold text-center">
+                                ℹ️ Este é um sistema de votação colaborativa. Vote nos números que você acha que o grupo deve jogar na Mega-Sena!
+                            </p>
+                        </div>
+                        <div class="rounded-xl bg-green-50 border-2 border-green-200 p-4">
+                            <p class="text-sm text-green-800 font-semibold text-center">
+                                ✓ Você pode votar sem enviar comprovante! O envio é opcional e pode ser feito depois.
+                            </p>
+                        </div>
+                    </div>
                     <!-- Números Selecionados (Preview Top) -->
                     @if (count($selectedNumbers) > 0)
                         <div class="mb-8">
                             <div class="mb-4 flex items-center justify-between">
                                 <span class="text-sm font-semibold text-gray-700">
-                                    Números Selecionados:
+                                    Seus Votos:
                                 </span>
                                 <span class="rounded-full bg-green-100 px-4 py-1 text-sm font-bold text-green-700">
                                     {{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}
@@ -184,7 +197,17 @@
 
                         <!-- Upload de Comprovante -->
                         <div class="mb-8">
-                            <h3 class="mb-4 text-lg font-bold text-gray-800">Comprovante de Pagamento (Opcional)</h3>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-800">Comprovante de Contribuição</h3>
+                                <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+                                    Opcional
+                                </span>
+                            </div>
+                            <div class="rounded-xl bg-blue-50 border-2 border-blue-200 p-4 mb-4">
+                                <p class="text-sm text-blue-800">
+                                    ℹ️ Você pode enviar o comprovante agora ou depois. O envio não é obrigatório para votar.
+                                </p>
+                            </div>
                             <div
                                 class="rounded-xl border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-green-500">
                                 <input type="file" wire:model="paymentProof" accept="image/*,.pdf" class="hidden"
@@ -195,7 +218,8 @@
                                     <p class="text-xs text-gray-500">JPG, PNG ou PDF (Máx: 5MB)</p>
                                 </label>
                                 @if ($paymentProof)
-                                    <p class="mt-3 text-sm font-medium text-green-600">✓ Arquivo selecionado</p>
+                                    <p class="mt-3 text-sm font-medium text-green-600">✓ Arquivo selecionado:
+                                        {{ $paymentProof->getClientOriginalName() }}</p>
                                 @endif
                             </div>
                             @error('paymentProof')
@@ -209,7 +233,7 @@
                         class="megasena-gradient w-full transform rounded-xl py-4 text-lg font-bold text-white transition-all hover:scale-105 hover:shadow-xl disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50"
                         wire:loading.attr="disabled">
                         <span wire:loading.remove>
-                            ✅ Confirmar Aposta
+                            ✅ Registrar Voto
                         </span>
                         <span wire:loading>
                             Processando...
@@ -219,6 +243,12 @@
                     @if (count($selectedNumbers) < $this->numbersToPickProperty && count($selectedNumbers) > 0)
                         <p class="mt-4 text-center text-sm text-gray-500">
                             Selecione mais {{ $this->numbersToPickProperty - count($selectedNumbers) }} número(s)
+                        </p>
+                    @endif
+                    
+                    @if (count($selectedNumbers) === $this->numbersToPickProperty)
+                        <p class="mt-4 text-center text-sm text-green-600 font-medium">
+                            ✓ Você pode votar agora! O comprovante é opcional.
                         </p>
                     @endif
                 </div>

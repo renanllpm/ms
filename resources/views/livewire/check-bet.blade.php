@@ -75,7 +75,7 @@
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                Pago
+                                Contribuiu
                             </span>
                         @else
                             <span
@@ -85,7 +85,7 @@
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                Pendente
+                                A Contribuir
                             </span>
                         @endif
                         <p class="mt-2 text-2xl font-bold text-green-600">
@@ -96,38 +96,43 @@
 
                 <!-- Números Escolhidos -->
                 <div>
-                    <h3 class="mb-4 text-lg font-semibold text-gray-700">Seus números da sorte:</h3>
+                    <h3 class="mb-4 text-lg font-semibold text-gray-700">Seus números votados:</h3>
                     <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
                         @foreach ($participant->sorted_numbers as $number)
                             @php
                                 $isPopular = in_array($number, $matchingNumbers);
                             @endphp
-                            <div class="relative flex aspect-square transform items-center justify-center rounded-2xl {{ $isPopular ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-4 ring-yellow-200' : 'bg-gradient-to-br from-green-500 to-green-600' }} text-2xl font-bold text-white shadow-lg transition-transform hover:scale-105">
+                            <div
+                                class="{{ $isPopular ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-4 ring-yellow-200' : 'bg-gradient-to-br from-green-500 to-green-600' }} relative flex aspect-square transform items-center justify-center rounded-2xl text-2xl font-bold text-white shadow-lg transition-transform hover:scale-105">
                                 {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
-                                @if($isPopular)
-                                    <div class="absolute -top-2 -right-2 bg-yellow-500 rounded-full p-1">
-                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                @if ($isPopular)
+                                    <div class="absolute -right-2 -top-2 rounded-full bg-yellow-500 p-1">
+                                        <svg class="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                     </div>
                                 @endif
                             </div>
                         @endforeach
                     </div>
-                    @if(count($matchingNumbers) > 0)
-                        <div class="mt-4 rounded-xl bg-yellow-50 border-2 border-yellow-200 p-4">
+                    @if (count($matchingNumbers) > 0)
+                        <div class="mt-4 rounded-xl border-2 border-yellow-200 bg-yellow-50 p-4">
                             <div class="flex items-start gap-3">
                                 <div class="flex-shrink-0">
-                                    <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    <svg class="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm font-semibold text-yellow-800">
-                                        🎯 Você acertou {{ count($matchingNumbers) }} {{ count($matchingNumbers) == 1 ? 'número' : 'números' }} dos mais populares!
+                                        🎯 Você acertou {{ count($matchingNumbers) }}
+                                        {{ count($matchingNumbers) == 1 ? 'número' : 'números' }} dos mais populares!
                                     </p>
-                                    <p class="text-xs text-yellow-700 mt-1">
-                                        Os números destacados em dourado estão entre os 10 mais escolhidos por todos os participantes.
+                                    <p class="mt-1 text-xs text-yellow-700">
+                                        Os números destacados em dourado estão entre os 10 mais escolhidos por todos os
+                                        participantes.
                                     </p>
                                 </div>
                             </div>
@@ -136,30 +141,33 @@
                 </div>
 
                 <!-- Números Mais Escolhidos -->
-                @if(count($mostChosenNumbers) > 0)
+                @if (count($mostChosenNumbers) > 0)
                     <div class="border-t border-gray-200 pt-6">
-                        <h3 class="mb-4 text-lg font-semibold text-gray-700 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-700">
+                            <svg class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                             Top 10 - Números mais escolhidos
                         </h3>
                         <div class="grid grid-cols-5 gap-3 sm:grid-cols-10">
-                            @foreach($mostChosenNumbers as $number => $count)
+                            @foreach ($mostChosenNumbers as $number => $count)
                                 @php
                                     $userHasThis = in_array($number, $participant->numbers);
                                 @endphp
                                 <div class="relative">
-                                    <div class="flex aspect-square items-center justify-center rounded-xl {{ $userHasThis ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-2 ring-yellow-300' : 'bg-gradient-to-br from-gray-100 to-gray-200' }} text-lg font-bold {{ $userHasThis ? 'text-white' : 'text-gray-700' }} shadow">
+                                    <div
+                                        class="{{ $userHasThis ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-2 ring-yellow-300' : 'bg-gradient-to-br from-gray-100 to-gray-200' }} {{ $userHasThis ? 'text-white' : 'text-gray-700' }} flex aspect-square items-center justify-center rounded-xl text-lg font-bold shadow">
                                         {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
                                     </div>
-                                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
+                                    <div
+                                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gray-800 px-2 py-0.5 text-xs text-white">
                                         {{ $count }}x
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        <p class="text-xs text-gray-500 mt-4 text-center">
+                        <p class="mt-4 text-center text-xs text-gray-500">
                             Quantidade de vezes que cada número foi escolhido por todos os participantes
                         </p>
                     </div>
@@ -202,16 +210,20 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                     clip-rule="evenodd" />
                             </svg>
-                            <span class="font-semibold">Pago em: {{ $participant->paid_at->format('d/m/Y H:i') }}</span>
+                            <span class="font-semibold">Pago em:
+                                {{ $participant->paid_at->format('d/m/Y H:i') }}</span>
                         </div>
                     @endif
                 </div>
 
-                <!-- Mensagem de Boa Sorte -->
+                <!-- Mensagem Final -->
                 <div class="pt-4 text-center">
                     <p
                         class="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-lg font-semibold text-transparent">
-                        🍀 Boa sorte no sorteio! 🍀
+                        🍀 Obrigado por participar da votação! 🍀
+                    </p>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Os números mais votados pelo grupo serão jogados
                     </p>
                 </div>
             </div>

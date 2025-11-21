@@ -2,18 +2,18 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\MegasenaChoice;
+use App\Models\Participant;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class Statistics extends Component
 {
     public array $numberFrequency = [];
-    public int $totalChoices = 0;
+    public int $totalVotes = 0;
     public int $totalNumbers = 0;
     public array $topNumbers = [];
     public array $leastNumbers = [];
-    public Collection $recentChoices;
+    public Collection $recentVotes;
 
     public function mount(): void
     {
@@ -22,16 +22,18 @@ class Statistics extends Component
 
     public function calculateStatistics(): void
     {
-        $choices = MegasenaChoice::with('user')->get();
-        $this->totalChoices = $choices->count();
+        $participants = Participant::all();
+        $this->totalVotes = $participants->count();
         
         // Inicializar array de frequência (1-60)
         $frequency = array_fill(1, 60, 0);
         
         // Contar frequência de cada número
-        foreach ($choices as $choice) {
-            foreach ($choice->numbers as $number) {
-                $frequency[$number]++;
+        foreach ($participants as $participant) {
+            foreach ($participant->numbers as $number) {
+                if ($number >= 1 && $number <= 60) {
+                    $frequency[$number]++;
+                }
             }
         }
         
@@ -44,23 +46,23 @@ class Statistics extends Component
         // Top 10 números mais escolhidos
         $this->topNumbers = array_slice($frequency, 0, 10, true);
         
-        // Top 10 números menos escolhidos
-        asort($frequency);
-        $this->leastNumbers = array_slice($frequency, 0, 10, true);
+        // Top 10 números menos escolhidos (que tenham pelo menos 1 voto)
+        $frequencyWithVotes = array_filter($frequency, fn($count) => $count > 0);
+        asort($frequencyWithVotes);
+        $this->leastNumbers = array_slice($frequencyWithVotes, 0, 10, true);
         
-        // Últimas 5 escolhas
-        $this->recentChoices = MegasenaChoice::with('user')
-            ->orderBy('created_at', 'desc')
+        // Últimos 5 votos
+        $this->recentVotes = Participant::orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
     }
 
     public function getPercentage(int $count): float
     {
-        if ($this->totalChoices === 0) {
+        if ($this->totalVotes === 0) {
             return 0;
         }
-        return round(($count / $this->totalChoices) * 100, 1);
+        return round(($count / $this->totalVotes) * 100, 1);
     }
 
     public function getNumberColor(int $frequency): string

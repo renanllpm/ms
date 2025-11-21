@@ -57,7 +57,7 @@
                         </a>
                         <a href="{{ route('admin.participants') }}"
                             class="{{ request()->routeIs('admin.participants') ? 'bg-white/20' : 'hover:bg-white/10' }} rounded-lg px-3 py-2 text-sm font-medium transition-colors xl:px-4">
-                            💰 <span class="hidden xl:inline">Participantes</span>
+                            🗳️ <span class="hidden xl:inline">Votações</span>
                         </a>
                         <a href="{{ route('admin.statistics') }}"
                             class="{{ request()->routeIs('admin.statistics') ? 'bg-white/20' : 'hover:bg-white/10' }} rounded-lg px-3 py-2 text-sm font-medium transition-colors xl:px-4">

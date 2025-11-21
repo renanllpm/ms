@@ -133,7 +133,7 @@ class PublicBet extends Component
                 'phone' => null,
                 'access_code' => $accessCode,
                 'numbers' => $sortedNumbers,
-                'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00),
+                'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00), // Contribuição por pessoa
                 'paid' => false,
             ];
 
@@ -149,12 +149,12 @@ class PublicBet extends Component
             $this->showSuccess = true;
             
             $this->toast()
-                ->success('✅ Aposta registrada com sucesso!')
+                ->success('✅ Voto registrado com sucesso!')
                 ->send();
 
         } catch (\Exception $e) {
             $this->toast()
-                ->error('❌ Erro ao registrar aposta. Tente novamente.')
+                ->error('❌ Erro ao registrar voto. Tente novamente.')
                 ->send();
         }
     }

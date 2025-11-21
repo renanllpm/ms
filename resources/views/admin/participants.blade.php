@@ -2,10 +2,10 @@
     <div class="space-y-6">
         <div class="text-center">
             <h1 class="mb-2 text-4xl font-bold text-gray-800 dark:text-gray-200">
-                💰 Gerenciamento de Participantes
+                🗳️ Votações e Contribuições
             </h1>
             <p class="text-gray-600 dark:text-gray-400">
-                Controle financeiro e gestão de apostas
+                Controle de votos e gestão financeira do bolão
             </p>
         </div>
 
