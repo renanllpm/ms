@@ -123,12 +123,16 @@ class PublicBet extends Component
         try {
             $accessCode = Participant::generateAccessCode();
             
+            // Ordenar os números antes de salvar
+            $sortedNumbers = $this->selectedNumbers;
+            sort($sortedNumbers);
+            
             $participantData = [
                 'name' => $this->name,
                 'email' => null,
                 'phone' => null,
                 'access_code' => $accessCode,
-                'numbers' => $this->selectedNumbers,
+                'numbers' => $sortedNumbers,
                 'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00),
                 'paid' => false,
             ];

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 
 beforeEach(function () {
-    $this->auth = User::factory()->create();
+    $this->auth = User::factory()->create(['is_admin' => true]);
 
     Auth::login($this->auth);
 
@@ -38,6 +38,7 @@ it('verifies component headers', function () {
         ['index' => 'id', 'label' => '#'],
         ['index' => 'name', 'label' => 'Name'],
         ['index' => 'email', 'label' => 'E-mail'],
+        ['index' => 'is_admin', 'label' => 'Admin', 'sortable' => false],
         ['index' => 'created_at', 'label' => 'Created'],
         ['index' => 'action', 'sortable' => false],
     ];
