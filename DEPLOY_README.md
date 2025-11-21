@@ -10,11 +10,13 @@
 ## 🔧 Preparação da Instância OCI
 
 ### 1. Conectar via SSH
+
 ```bash
 ssh -i sua-chave.pem opc@seu-ip-publico
 ```
 
 ### 2. Atualizar o sistema
+
 ```bash
 sudo yum update -y  # Oracle Linux
 # ou
@@ -22,6 +24,7 @@ sudo apt update && sudo apt upgrade -y  # Ubuntu
 ```
 
 ### 3. Instalar Docker
+
 ```bash
 # Oracle Linux
 sudo yum install -y docker
@@ -37,6 +40,7 @@ sudo usermod -aG docker $USER
 ```
 
 ### 4. Instalar Docker Compose (se não instalado)
+
 ```bash
 sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -44,17 +48,20 @@ docker-compose --version
 ```
 
 ### 5. Configurar Firewall (OCI)
+
 No painel da OCI:
-- Vá em **Networking > Virtual Cloud Networks**
-- Selecione sua VCN
-- Clique em **Security Lists**
-- Adicione regra de ingresso:
-  - Source CIDR: `0.0.0.0/0`
-  - IP Protocol: `TCP`
-  - Destination Port Range: `80`
-  - (Opcional) Porta `443` para HTTPS
+
+-   Vá em **Networking > Virtual Cloud Networks**
+-   Selecione sua VCN
+-   Clique em **Security Lists**
+-   Adicione regra de ingresso:
+    -   Source CIDR: `0.0.0.0/0`
+    -   IP Protocol: `TCP`
+    -   Destination Port Range: `80`
+    -   (Opcional) Porta `443` para HTTPS
 
 No servidor (Firewall interno):
+
 ```bash
 # Oracle Linux
 sudo firewall-cmd --permanent --add-service=http
@@ -70,6 +77,7 @@ sudo ufw enable
 ## 📦 Deploy da Aplicação
 
 ### 1. Build dos assets localmente (ANTES de commitar)
+
 ```bash
 # Na sua máquina local
 npm run build
@@ -84,6 +92,7 @@ git push origin main
 ```
 
 ### 2. Clonar o repositório
+
 ```bash
 cd /home/opc  # ou /home/ubuntu
 git clone https://github.com/seu-usuario/megasena.git
@@ -91,6 +100,7 @@ cd megasena
 ```
 
 ### 3. Configurar variáveis de ambiente
+
 ```bash
 # Copiar o arquivo de produção
 cp .env.production .env
@@ -102,7 +112,8 @@ nano .env
 # APP_URL=http://seu-ip-publico
 ```
 
-### 3. Build e iniciar os containers
+### 4. Build e iniciar os containers
+
 ```bash
 # Build da imagem (primeira vez)
 docker-compose build
@@ -114,7 +125,8 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-### 4. Verificar status
+### 5. Verificar status
+
 ```bash
 # Status dos containers
 docker-compose ps
@@ -129,6 +141,7 @@ docker-compose logs -f app
 ## 🔄 Comandos Úteis
 
 ### Atualizar aplicação
+
 ```bash
 cd /home/opc/megasena
 git pull origin main
@@ -138,6 +151,7 @@ docker-compose up -d
 ```
 
 ### Executar comandos Laravel
+
 ```bash
 # Entrar no container
 docker-compose exec app sh
@@ -156,6 +170,7 @@ docker-compose exec app php artisan view:clear
 ```
 
 ### Backup do banco de dados
+
 ```bash
 # Copiar banco SQLite do container
 docker cp megasena-app:/var/www/html/database/database.sqlite ./backup-$(date +%Y%m%d).sqlite
@@ -165,6 +180,7 @@ sudo cp ./database/database.sqlite ./backup-$(date +%Y%m%d).sqlite
 ```
 
 ### Restaurar backup
+
 ```bash
 # Parar container
 docker-compose down
@@ -177,6 +193,7 @@ docker-compose up -d
 ```
 
 ### Monitoramento
+
 ```bash
 # Ver uso de recursos
 docker stats
@@ -191,6 +208,7 @@ docker-compose exec app tail -f /var/www/html/storage/logs/laravel.log
 ## 🔒 Segurança (Produção)
 
 ### 1. Configurar HTTPS com Let's Encrypt (Opcional)
+
 ```bash
 # Instalar Certbot
 sudo snap install --classic certbot
@@ -203,6 +221,7 @@ sudo certbot renew --dry-run
 ```
 
 ### 2. Configurar variáveis sensíveis
+
 ```bash
 # Gerar nova APP_KEY
 docker-compose exec app php artisan key:generate
@@ -212,6 +231,7 @@ docker-compose exec app php artisan key:generate
 ```
 
 ### 3. Atualizar usuário padrão
+
 ```bash
 docker-compose exec app php artisan tinker
 # >>> $user = User::where('email', 'renanllpm@gmail.com')->first();
@@ -222,10 +242,12 @@ docker-compose exec app php artisan tinker
 ## 📊 Monitoramento de Recursos (OCI Free Tier)
 
 A instância Free Tier tem recursos limitados:
-- **RAM**: 1GB (A1) ou 2GB (E2)
-- **CPU**: 1 core OCPU
+
+-   **RAM**: 1GB (A1) ou 2GB (E2)
+-   **CPU**: 1 core OCPU
 
 Para otimizar:
+
 ```bash
 # Ver uso de memória
 free -h
@@ -246,6 +268,7 @@ services:
 ## 🆘 Troubleshooting
 
 ### Container não inicia
+
 ```bash
 # Ver logs detalhados
 docker-compose logs app
@@ -258,6 +281,7 @@ docker-compose exec app ls -la /var/www/html/storage
 ```
 
 ### Erro 500
+
 ```bash
 # Ver logs do Laravel
 docker-compose exec app tail -100 /var/www/html/storage/logs/laravel.log
@@ -267,6 +291,7 @@ docker-compose exec app php artisan optimize:clear
 ```
 
 ### Banco de dados corrompido
+
 ```bash
 # Resetar banco (CUIDADO: apaga todos os dados)
 docker-compose exec app rm /var/www/html/database/database.sqlite
@@ -286,15 +311,17 @@ docker-compose exec app php artisan db:seed --force
 ## 🎯 Acesso à Aplicação
 
 Após o deploy:
-- **Aplicação**: http://seu-ip-publico
-- **Login Admin**: http://seu-ip-publico/login
-- **Credenciais padrão**: renanllpm@gmail.com / mudar@123
+
+-   **Aplicação**: http://seu-ip-publico
+-   **Login Admin**: http://seu-ip-publico/login
+-   **Credenciais padrão**: renanllpm@gmail.com / mudar@123
 
 **⚠️ IMPORTANTE: Altere a senha padrão imediatamente após o primeiro acesso!**
 
 ## 📞 Suporte
 
 Em caso de problemas:
+
 1. Verifique os logs: `docker-compose logs -f`
 2. Verifique o health do container: `docker-compose ps`
 3. Teste conectividade: `curl http://localhost`

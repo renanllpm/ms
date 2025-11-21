@@ -23,11 +23,17 @@ RUN addgroup -g 1000 laravel && \
 # Diretório de trabalho
 WORKDIR /var/www/html
 
+# Copiar composer files primeiro (para cache de layers)
+COPY --chown=laravel:laravel composer.json composer.lock ./
+
+# Instalar dependências PHP (otimizado para produção)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
+
 # Copiar arquivos da aplicação (incluindo assets já buildados)
 COPY --chown=laravel:laravel . .
 
-# Instalar dependências PHP (otimizado para produção)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Executar scripts do composer
+RUN composer dump-autoload --optimize
 
 # Criar diretórios necessários e ajustar permissões
 RUN mkdir -p storage/framework/sessions \

@@ -26,5 +26,8 @@ pint.json
 database/database.sqlite
 database/*.sqlite
 
-# Incluir assets buildados
+# Incluir arquivos necessários
 !public/build
+!database/seeders
+!database/migrations
+!database/factories

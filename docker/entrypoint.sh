@@ -10,8 +10,11 @@ sleep 2
 if [ ! -f /var/www/html/.env ]; then
     echo "📝 Criando arquivo .env..."
     cp /var/www/html/.env.example /var/www/html/.env
-    chown laravel:laravel /var/www/html/.env
 fi
+
+# Ajustar permissões do .env antes de gerar chave
+chown laravel:laravel /var/www/html/.env
+chmod 664 /var/www/html/.env
 
 # Gerar chave da aplicação se não existir
 if ! grep -q "APP_KEY=base64:" /var/www/html/.env; then
