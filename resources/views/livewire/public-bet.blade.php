@@ -101,7 +101,7 @@
             </div>
 
             <!-- Conteúdo Principal -->
-            <div class="mx-auto -mt-8 max-w-4xl px-4">
+            <div class="mx-auto -mt-8 max-w-7xl px-4">
                 <div class="rounded-3xl bg-white p-6 shadow-2xl md:p-10">
                     <div class="mb-6 space-y-3">
                         <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
@@ -130,7 +130,7 @@
                             <div class="flex flex-wrap justify-center gap-2 md:justify-start">
                                 @foreach ($selectedNumbers as $number)
                                     <div
-                                        class="megasena-ball selected flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold text-white">
+                                        class="megasena-ball selected flex h-8 w-8 items-center justify-center rounded-full text-lg font-bold text-white">
                                         {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
                                     </div>
                                 @endforeach
@@ -167,10 +167,10 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-6 gap-3">
+                        <div class="grid-cols-15 grid gap-4">
                             @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
                                 <button type="button" wire:click="toggleNumber({{ $i }})"
-                                    class="megasena-ball {{ $this->isSelected($i) ? 'selected' : '' }} flex aspect-square w-full items-center justify-center rounded-full text-base font-bold text-white shadow-md md:text-lg"
+                                    class="megasena-ball {{ $this->isSelected($i) ? 'selected' : '' }} flex aspect-square w-full items-center justify-center rounded-full text-sm font-bold text-white shadow-md md:text-lg"
                                     wire:loading.attr="disabled">
                                     {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                                 </button>
