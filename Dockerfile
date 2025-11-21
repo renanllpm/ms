@@ -11,10 +11,7 @@ RUN apk add --no-cache \
     unzip \
     git \
     curl \
-    && docker-php-ext-install pdo_mysql zip
-
-# Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+    && docker-php-ext-install pdo_mysql pdo_sqlite zip
 
 # Criar usuário para Laravel
 RUN addgroup -g 1000 laravel && \
@@ -22,31 +19,6 @@ RUN addgroup -g 1000 laravel && \
 
 # Diretório de trabalho
 WORKDIR /var/www/html
-
-# Copiar composer files primeiro (para cache de layers)
-COPY --chown=laravel:laravel composer.json composer.lock ./
-
-# Instalar dependências PHP (otimizado para produção)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
-
-# Copiar arquivos da aplicação (incluindo assets já buildados)
-COPY --chown=laravel:laravel . .
-
-# Executar scripts do composer
-RUN composer dump-autoload --optimize
-
-# Criar diretórios necessários e ajustar permissões
-RUN mkdir -p storage/framework/sessions \
-    storage/framework/views \
-    storage/framework/cache \
-    storage/logs \
-    bootstrap/cache \
-    database \
-    && chown -R laravel:laravel storage bootstrap/cache database \
-    && chmod -R 775 storage bootstrap/cache
-
-# Criar banco de dados SQLite
-RUN touch database/database.sqlite && chown laravel:laravel database/database.sqlite
 
 # Configuração do Nginx
 COPY docker/nginx.conf /etc/nginx/nginx.conf

@@ -23,7 +23,7 @@ echo -e "${BLUE}🧹 Limpando build anterior...${NC}"
 rm -rf ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}
 
-# 1. Build dos assets
+# 2. Build dos assets
 echo -e "${BLUE}📦 Buildando assets frontend...${NC}"
 npm run build
 
@@ -32,28 +32,25 @@ if [ ! -d "public/build" ]; then
     exit 1
 fi
 
-# 2. Build da imagem Docker
-echo -e "${BLUE}🐳 Buildando imagem Docker...${NC}"
-docker build -t megasena:latest .
+# 3. Copiar arquivos necessários para o pacote
+echo -e "${BLUE}📋 Copiando arquivos da aplicação...${NC}"
 
-# 3. Exportar imagem Docker para .tar
-echo -e "${BLUE}💾 Exportando imagem Docker...${NC}"
-docker save -o ${BUILD_DIR}/megasena-image.tar megasena:latest
+# Copiar toda a aplicação exceto itens do .dockerignore
+rsync -av --exclude-from=.dockerignore \
+    --exclude='.build' \
+    --exclude='node_modules' \
+    --exclude='vendor' \
+    --exclude='.git' \
+    ./ ${BUILD_DIR}/
 
-# 4. Copiar arquivos necessários
-echo -e "${BLUE}📋 Copiando arquivos de configuração...${NC}"
+# Copiar configurações do Docker
 cp docker-compose.yml ${BUILD_DIR}/
 cp -r docker ${BUILD_DIR}/
+cp .dockerignore ${BUILD_DIR}/
+cp Dockerfile ${BUILD_DIR}/
 cp .env.production ${BUILD_DIR}/.env.example
 
-# Criar Dockerfile dummy (não será usado, mas docker compose precisa dele)
-cat > ${BUILD_DIR}/Dockerfile << 'DOCKERFILE_EOF'
-# Este Dockerfile não é usado no deploy
-# A imagem já está carregada via megasena-image.tar
-FROM megasena:latest
-DOCKERFILE_EOF
-
-# 5. Criar script de deploy para o servidor
+# 4. Criar script de deploy para o servidor
 echo -e "${BLUE}📝 Criando script de deploy...${NC}"
 cat > ${BUILD_DIR}/deploy.sh << 'EOF'
 #!/bin/bash
@@ -83,9 +80,12 @@ if ! docker compose version &> /dev/null; then
     exit 1
 fi
 
-# Carregar imagem Docker
-echo -e "${BLUE}📦 Carregando imagem Docker...${NC}"
-docker load -i megasena-image.tar
+# Verificar se rsync está disponível
+if ! command -v rsync &> /dev/null; then
+    echo -e "${RED}❌ rsync não está instalado!${NC}"
+    echo "Instale rsync: apt-get install rsync ou yum install rsync"
+    exit 1
+fi
 
 # Configurar .env
 if [ ! -f .env ]; then
@@ -122,7 +122,7 @@ mkdir -p bootstrap/cache database
 chmod -R 775 storage bootstrap/cache database
 chown -R 1000:1000 storage bootstrap/cache database 2>/dev/null || true
 
-# Iniciar aplicação
+# Build e iniciar aplicação
 echo -e "${BLUE}🚀 Iniciando aplicação...${NC}"
 docker compose up -d
 
@@ -167,7 +167,7 @@ EOF
 
 chmod +x ${BUILD_DIR}/deploy.sh
 
-# 6. Criar README de deploy
+# 5. Criar README de deploy
 cat > ${BUILD_DIR}/README.md << 'EOF'
 # 🚀 Deploy MegaSena - Pacote OCI
 
@@ -175,8 +175,10 @@ Este pacote contém tudo necessário para fazer deploy da aplicação MegaSena e
 
 ## 📦 Conteúdo do Pacote
 
-- `megasena-image.tar` - Imagem Docker da aplicação
+- Código fonte completo da aplicação
+- `public/build/` - Assets frontend já compilados
 - `docker-compose.yml` - Configuração do Docker Compose
+- `Dockerfile` - Definição da imagem Docker
 - `docker/` - Configurações de Nginx, Supervisor e scripts
 - `.env.example` - Template de variáveis de ambiente
 - `deploy.sh` - Script automatizado de deploy
@@ -223,20 +225,17 @@ sudo ./deploy.sh
 
 ### Opção 2: Deploy Manual
 ```bash
-# 1. Carregar imagem
-docker load -i megasena-image.tar
-
-# 2. Configurar ambiente
+# 1. Configurar ambiente
 cp .env.example .env
 nano .env  # Edite conforme necessário
 
-# 3. Criar diretórios
+# 2. Criar diretórios
 mkdir -p storage/{app,logs,framework/{cache,sessions,views}} bootstrap/cache database
 
-# 4. Iniciar aplicação
+# 3. Iniciar aplicação
 docker compose up -d
 
-# 5. Verificar
+# 4. Verificar
 docker compose ps
 docker compose logs -f
 ```
@@ -379,7 +378,7 @@ docker cp megasena-app:/var/www/html/database/database.sqlite ./backup-$(date +%
 - Usuário padrão do container: laravel (UID 1000)
 EOF
 
-# 7. Criar arquivo de informações do build
+# 6. Criar arquivo de informações do build
 cat > ${BUILD_DIR}/BUILD_INFO.txt << EOF
 MegaSena - Build Information
 ============================
@@ -413,11 +412,11 @@ cd ${BUILD_DIR}
 tar -czf ../${ARCHIVE_NAME} *
 cd ..
 
-# 9. Limpar diretório temporário (opcional)
+# 8. Limpar diretório temporário (opcional)
 echo -e "${BLUE}🧹 Limpando arquivos temporários...${NC}"
 rm -rf ${BUILD_DIR}
 
-# 10. Informações finais
+# 9. Informações finais
 FILE_SIZE=$(du -h ${ARCHIVE_NAME} | cut -f1)
 
 echo ""

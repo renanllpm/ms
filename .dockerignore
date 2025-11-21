@@ -3,13 +3,13 @@ vendor
 .git
 .gitignore
 .env
-.env.*
+.env._
 !.env.example
-storage/logs/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
-bootstrap/cache/*
+storage/logs/_
+storage/framework/cache/_
+storage/framework/sessions/_
+storage/framework/views/_
+bootstrap/cache/_
 !storage/logs/.gitignore
 !storage/framework/cache/.gitignore
 !storage/framework/sessions/.gitignore
@@ -21,12 +21,13 @@ tests
 phpunit.xml
 phpstan.neon
 pint.json
-*.md
+_.md
 !README.md
 database/database.sqlite
-database/*.sqlite
+database/_.sqlite
 
 # Incluir arquivos necessários
+
 !public/build
 !database/seeders
 !database/migrations

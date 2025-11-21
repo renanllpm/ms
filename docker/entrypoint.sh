@@ -3,6 +3,22 @@ set -e
 
 echo "🚀 Iniciando MegaSena Application..."
 
+# Instalar extensões PHP necessárias
+echo "📦 Instalando extensões PHP..."
+apk add --no-cache nginx supervisor sqlite libzip-dev zip unzip curl
+docker-php-ext-install pdo_mysql pdo_sqlite zip 2>/dev/null || true
+
+# Criar usuário laravel se não existir
+if ! id -u laravel >/dev/null 2>&1; then
+    addgroup -g 1000 laravel 2>/dev/null || true
+    adduser -D -u 1000 -G laravel laravel 2>/dev/null || true
+fi
+
+# Configurar PHP-FPM logs
+mkdir -p /var/log/php-fpm
+echo "php_admin_value[error_log] = /var/log/php-fpm/error.log" >> /usr/local/etc/php-fpm.d/www.conf 2>/dev/null || true
+echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf 2>/dev/null || true
+
 # Aguardar um momento para garantir que o filesystem está pronto
 sleep 2
 
@@ -27,6 +43,11 @@ echo "🔒 Ajustando permissões..."
 chown -R laravel:laravel /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Criar diretório de cache se não existir
+mkdir -p /var/www/html/storage/framework/cache/data
+chown -R laravel:laravel /var/www/html/storage/framework/cache
+chmod -R 775 /var/www/html/storage/framework/cache
+
 # Criar banco de dados SQLite se não existir
 if [ ! -f /var/www/html/database/database.sqlite ]; then
     echo "💾 Criando banco de dados SQLite..."
@@ -38,9 +59,8 @@ fi
 # Limpar cache
 echo "🧹 Limpando cache..."
 php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
 php artisan route:clear
+php artisan view:clear
 
 # Rodar migrações
 echo "🗄️  Executando migrações..."
