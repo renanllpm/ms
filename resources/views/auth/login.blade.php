@@ -41,8 +41,8 @@
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-700">
                             E-mail
                         </label>
-                        <input id="email" type="email" name="email"
-                            value="{{ old('email', 'renanllpm@gmail.com') }}" required autofocus autocomplete="username"
+                        <input id="email" type="email" name="email" value="{{ old('email', '') }}" required
+                            autofocus autocomplete="username"
                             class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-all focus:border-green-500 focus:ring-4 focus:ring-green-100">
                         @error('email')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
