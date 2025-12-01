@@ -10,7 +10,7 @@ beforeEach(function () {
 
 test('admin can create a participant manually', function () {
     $this->actingAs($this->admin);
-    
+
     Livewire::test('admin.create-participant')
         ->set('name', 'João Silva')
         ->set('phone', '11999999999')
@@ -21,7 +21,7 @@ test('admin can create a participant manually', function () {
         ->call('createParticipant');
 
     expect(Participant::count())->toBe(1);
-    
+
     $participant = Participant::first();
     expect($participant->name)->toBe('João Silva')
         ->and($participant->phone)->toBe('11999999999')
@@ -41,7 +41,7 @@ test('admin can share participant via whatsapp', function () {
     ]);
 
     $this->actingAs($this->admin);
-    
+
     Livewire::test('admin.manage-participants')
         ->call('shareViaWhatsApp', $participant->id)
         ->assertDispatched('redirect');
@@ -49,7 +49,7 @@ test('admin can share participant via whatsapp', function () {
 
 test('selected numbers must match required count', function () {
     $this->actingAs($this->admin);
-    
+
     Livewire::test('admin.create-participant')
         ->set('name', 'João Silva')
         ->set('phone', '11999999999')
@@ -62,7 +62,7 @@ test('selected numbers must match required count', function () {
 
 test('participant creation validates required fields', function () {
     $this->actingAs($this->admin);
-    
+
     Livewire::test('admin.create-participant')
         ->call('createParticipant')
         ->assertHasErrors(['name', 'phone', 'selectedNumbers']);

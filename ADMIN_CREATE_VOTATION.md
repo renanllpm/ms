@@ -3,20 +3,22 @@
 ## 🎯 O que foi implementado:
 
 ### 1️⃣ **Sistema de Criar Votações Manualmente**
-- ✅ Botão "Criar Nova Votação" no painel de gerenciamento
-- ✅ Modal com formulário completo
-- ✅ Seleção de números com interface visual
-- ✅ Botão "Surpresinha" para gerar números aleatórios
-- ✅ Validações em tempo real
-- ✅ Opção de marcar como "já pago"
-- ✅ Código de acesso gerado automaticamente
+
+-   ✅ Botão "Criar Nova Votação" no painel de gerenciamento
+-   ✅ Modal com formulário completo
+-   ✅ Seleção de números com interface visual
+-   ✅ Botão "Surpresinha" para gerar números aleatórios
+-   ✅ Validações em tempo real
+-   ✅ Opção de marcar como "já pago"
+-   ✅ Código de acesso gerado automaticamente
 
 ### 2️⃣ **Compartilhamento via WhatsApp Web**
-- ✅ Botão de compartilhar em cada participante
-- ✅ Abre WhatsApp Web automaticamente
-- ✅ Mensagem personalizada com código de acesso
-- ✅ Link para consultar a votação
-- ✅ Formatação profissional da mensagem
+
+-   ✅ Botão de compartilhar em cada participante
+-   ✅ Abre WhatsApp Web automaticamente
+-   ✅ Mensagem personalizada com código de acesso
+-   ✅ Link para consultar a votação
+-   ✅ Formatação profissional da mensagem
 
 ## 📁 Arquivos Criados/Modificados:
 
@@ -51,73 +53,80 @@
 ### **Criar Nova Votação:**
 
 1. **Acessar o painel de administração**
-   - Faça login como admin
-   - Clique em "Gerenciar Participantes"
+
+    - Faça login como admin
+    - Clique em "Gerenciar Participantes"
 
 2. **Clicar no botão "Criar Nova Votação"**
-   - Se abrirá um modal com o formulário
+
+    - Se abrirá um modal com o formulário
 
 3. **Preencher os dados:**
-   - Nome completo
-   - Telefone (obrigatório para WhatsApp)
-   - E-mail (opcional)
-   - Valor da aposta
-   - Escolher 6 números (ou usar "Surpresinha")
-   - Opcionalmente: marcar como "já pago"
+
+    - Nome completo
+    - Telefone (obrigatório para WhatsApp)
+    - E-mail (opcional)
+    - Valor da aposta
+    - Escolher 6 números (ou usar "Surpresinha")
+    - Opcionalmente: marcar como "já pago"
 
 4. **Clicar em "Criar Votação"**
-   - A votação é criada com código de acesso automático
-   - Você é redirecionado de volta à lista
+    - A votação é criada com código de acesso automático
+    - Você é redirecionado de volta à lista
 
 ### **Compartilhar via WhatsApp:**
 
 1. **Na lista de participantes, clique no botão "Compartilhar"** (ícone de share)
 
 2. **Automático:**
-   - Abre WhatsApp Web com a mensagem pré-preenchida
-   - Contém código de acesso
-   - Link para consulta
-   - Valor da aposta
+
+    - Abre WhatsApp Web com a mensagem pré-preenchida
+    - Contém código de acesso
+    - Link para consulta
+    - Valor da aposta
 
 3. **O participante recebe:**
-   ```
-   🍀 Olá João Silva! 🍀
 
-   Sua votação na Mega-Sena foi registrada! 🎲
+    ```
+    🍀 Olá João Silva! 🍀
 
-   📝 Seu código de acesso: ABC12345
+    Sua votação na Mega-Sena foi registrada! 🎲
 
-   💰 Valor: R$ 10,00
+    📝 Seu código de acesso: ABC12345
 
-   🔍 Consulte sua votação em:
-   https://seu-site.com/consultar
+    💰 Valor: R$ 10,00
 
-   Obrigado por participar! ✨
-   ```
+    🔍 Consulte sua votação em:
+    https://seu-site.com/consultar
+
+    Obrigado por participar! ✨
+    ```
 
 ## 🔧 Validações:
 
-- ✅ Nome: Obrigatório, mín 3 caracteres
-- ✅ Telefone: Obrigatório (para WhatsApp)
-- ✅ E-mail: Opcional, formato validado
-- ✅ Números: Exatamente 6 números únicos (configurável)
-- ✅ Valor: Obrigatório, maior que 0
+-   ✅ Nome: Obrigatório, mín 3 caracteres
+-   ✅ Telefone: Obrigatório (para WhatsApp)
+-   ✅ E-mail: Opcional, formato validado
+-   ✅ Números: Exatamente 6 números únicos (configurável)
+-   ✅ Valor: Obrigatório, maior que 0
 
 ## 💡 Funcionalidades Especiais:
 
 ### **Seleção de Números:**
-- Clique para selecionar/desselecionar
-- Cores visuais para selecionados
-- Contador: "Escolha X/6 números"
-- Botão "Surpresinha" para aleatório
-- Botão "Limpar" para resetar
+
+-   Clique para selecionar/desselecionar
+-   Cores visuais para selecionados
+-   Contador: "Escolha X/6 números"
+-   Botão "Surpresinha" para aleatório
+-   Botão "Limpar" para resetar
 
 ### **WhatsApp Integration:**
-- Usa API `https://wa.me/` do WhatsApp
-- Formata telefone automaticamente
-- Remove caracteres especiais
-- Abre em nova aba do navegador
-- Compatível com WhatsApp Web e Mobile
+
+-   Usa API `https://wa.me/` do WhatsApp
+-   Formata telefone automaticamente
+-   Remove caracteres especiais
+-   Abre em nova aba do navegador
+-   Compatível com WhatsApp Web e Mobile
 
 ## 🧪 Testes Inclusos:
 
@@ -158,20 +167,23 @@ Participante acessa /consultar com seu código
 ## 🎨 Interface:
 
 ### Botão de Criar:
-- Verde com ícone de "+"
-- Position: Topo da tabela de participantes
-- Texto: "Criar Nova Votação"
+
+-   Verde com ícone de "+"
+-   Position: Topo da tabela de participantes
+-   Texto: "Criar Nova Votação"
 
 ### Modal:
-- Fundo escuro com opacidade
-- Borderradius 3xl
-- Drag-friendly
-- Botão de fechar (X)
+
+-   Fundo escuro com opacidade
+-   Borderradius 3xl
+-   Drag-friendly
+-   Botão de fechar (X)
 
 ### Botões de Ação:
-- **Compartilhar**: Ícone "share" (verde)
-- **Pago/Pendente**: Ícone "check-circle"/"x-circle"
-- **Excluir**: Ícone "trash" (vermelho)
+
+-   **Compartilhar**: Ícone "share" (verde)
+-   **Pago/Pendente**: Ícone "check-circle"/"x-circle"
+-   **Excluir**: Ícone "trash" (vermelho)
 
 ---
 
@@ -183,4 +195,3 @@ Participante acessa /consultar com seu código
 4. **Compartilhamento direto** via WhatsApp
 5. **Código profissional** com testes inclusos
 6. **Responsivo** em mobile e desktop
-
