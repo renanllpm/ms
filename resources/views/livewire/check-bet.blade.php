@@ -239,12 +239,16 @@
                     <div class="border-t border-gray-200 pt-6">
                         <div class="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-6">
                             <div class="mb-4 flex items-start gap-4">
-                                <svg class="h-8 w-8 flex-shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                                <svg class="h-8 w-8 flex-shrink-0 text-yellow-600" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
                                 </svg>
                                 <div class="flex-1">
-                                    <h3 class="text-lg font-semibold text-yellow-900">Você se absteve desta votação</h3>
-                                    <p class="mt-1 text-sm text-yellow-800">Você pode escolher seus números agora se mudar de ideia</p>
+                                    <h3 class="text-lg font-semibold text-yellow-900">Você se absteve desta votação
+                                    </h3>
+                                    <p class="mt-1 text-sm text-yellow-800">Você pode escolher seus números agora se
+                                        mudar de ideia</p>
                                 </div>
                             </div>
 
@@ -257,11 +261,13 @@
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <p class="mb-3 text-sm font-semibold text-yellow-900">
-                                            Selecione {{ $this->numbersToPickProperty }} números ({{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}):
+                                            Selecione {{ $this->numbersToPickProperty }} números
+                                            ({{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}):
                                         </p>
                                         <div class="grid grid-cols-6 gap-2">
                                             @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
-                                                <button type="button" wire:click="toggleNumberEdit({{ $i }})"
+                                                <button type="button"
+                                                    wire:click="toggleNumberEdit({{ $i }})"
                                                     class="{{ in_array($i, $selectedNumbers) ? 'bg-yellow-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
                                                     {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                                                 </button>
@@ -290,58 +296,62 @@
 
                 <!-- Números Escolhidos -->
                 @if (!$editingNumbers)
-                <div>
-                    <h3 class="mb-4 text-lg font-semibold text-gray-700">
-                        @if ($participant->abstained)
-                            Seu status: Abstenção (sem números)
-                        @else
-                            Seus números votados:
-                        @endif
-                    </h3>
-                    @if (!$participant->abstained && count($participant->sorted_numbers) > 0)
-                    <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
-                        @foreach ($participant->sorted_numbers as $number)
-                            @php
-                                $isPopular = in_array($number, $matchingNumbers);
-                            @endphp
-                            <div
-                                class="{{ $isPopular ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-4 ring-yellow-200' : 'bg-gradient-to-br from-green-500 to-green-600' }} relative flex aspect-square transform items-center justify-center rounded-2xl text-2xl font-bold text-white shadow-lg transition-transform hover:scale-105">
-                                {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
-                                @if ($isPopular)
-                                    <div class="absolute -right-2 -top-2 rounded-full bg-yellow-500 p-1">
-                                        <svg class="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
+                    <div>
+                        <h3 class="mb-4 text-lg font-semibold text-gray-700">
+                            @if ($participant->abstained)
+                                Seu status: Abstenção (sem números)
+                            @else
+                                Seus números votados:
+                            @endif
+                        </h3>
+                        @if (!$participant->abstained && count($participant->sorted_numbers) > 0)
+                            <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
+                                @foreach ($participant->sorted_numbers as $number)
+                                    @php
+                                        $isPopular = in_array($number, $matchingNumbers);
+                                    @endphp
+                                    <div
+                                        class="{{ $isPopular ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 ring-4 ring-yellow-200' : 'bg-gradient-to-br from-green-500 to-green-600' }} relative flex aspect-square transform items-center justify-center rounded-2xl text-2xl font-bold text-white shadow-lg transition-transform hover:scale-105">
+                                        {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                        @if ($isPopular)
+                                            <div class="absolute -right-2 -top-2 rounded-full bg-yellow-500 p-1">
+                                                <svg class="h-4 w-4 text-white" fill="currentColor"
+                                                    viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            </div>
+                                        @endif
                                     </div>
-                                @endif
+                                @endforeach
                             </div>
-                        @endforeach
+                            @if (count($matchingNumbers) > 0)
+                                <div class="mt-4 rounded-xl border-2 border-yellow-200 bg-yellow-50 p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-6 w-6 text-yellow-600" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-yellow-800">
+                                                🎯 Você acertou {{ count($matchingNumbers) }}
+                                                {{ count($matchingNumbers) == 1 ? 'número' : 'números' }} dos mais
+                                                populares!
+                                            </p>
+                                            <p class="mt-1 text-xs text-yellow-700">
+                                                Os números destacados em dourado estão entre os 10 mais escolhidos por
+                                                todos os
+                                                participantes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
                     </div>
-                    @if (count($matchingNumbers) > 0)
-                        <div class="mt-4 rounded-xl border-2 border-yellow-200 bg-yellow-50 p-4">
-                            <div class="flex items-start gap-3">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-semibold text-yellow-800">
-                                        🎯 Você acertou {{ count($matchingNumbers) }}
-                                        {{ count($matchingNumbers) == 1 ? 'número' : 'números' }} dos mais populares!
-                                    </p>
-                                    <p class="mt-1 text-xs text-yellow-700">
-                                        Os números destacados em dourado estão entre os 10 mais escolhidos por todos os
-                                        participantes.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @endif
-                </div>
                 @endif
 
                 <!-- Números Mais Escolhidos -->
