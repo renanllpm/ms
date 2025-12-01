@@ -16,6 +16,7 @@ class Participant extends Model
         'phone',
         'access_code',
         'numbers',
+        'abstained',
         'amount',
         'paid',
         'payment_proof',
@@ -25,6 +26,7 @@ class Participant extends Model
 
     protected $casts = [
         'numbers' => 'array',
+        'abstained' => 'boolean',
         'amount' => 'decimal:2',
         'paid' => 'boolean',
         'paid_at' => 'datetime',

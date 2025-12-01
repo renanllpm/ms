@@ -17,10 +17,18 @@
                     </div>
 
                     <h2 class="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
-                        Voto Registrado!
+                        @if ($abstained)
+                            Abstenção Registrada!
+                        @else
+                            Voto Registrado!
+                        @endif
                     </h2>
                     <p class="mb-8 text-gray-600">
-                        Seu voto foi registrado com sucesso. Os números mais votados serão jogados pelo grupo!
+                        @if ($abstained)
+                            Sua abstenção foi registrada com sucesso. Os números votados pelos demais integrantes serão jogados!
+                        @else
+                            Seu voto foi registrado com sucesso. Os números mais votados serão jogados pelo grupo!
+                        @endif
                     </p>
 
                     <!-- Código de Acesso -->
@@ -35,6 +43,7 @@
                     </div>
 
                     <!-- Números Escolhidos -->
+                    @if (!$abstained && count($selectedNumbers) > 0)
                     <div class="mb-8">
                         <p class="mb-4 text-sm font-semibold text-gray-700">Seus Números Votados:</p>
                         <div class="flex flex-wrap justify-center gap-3">
@@ -46,6 +55,7 @@
                             @endforeach
                         </div>
                     </div>
+                    @endif
 
                     <!-- Informações -->
                     <div class="mb-8 rounded-2xl bg-gray-50 p-6 text-center">
@@ -136,7 +146,7 @@
                                 @endforeach
                             </div>
                         </div>
-                    @else
+                    @elseif (!$abstained)
                         <div class="mb-8 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 p-6 text-center">
                             <p class="font-medium text-green-700">
                                 👆 Escolha {{ $this->numbersToPickProperty }} números de {{ $this->minNumberProperty }}
@@ -150,6 +160,7 @@
                     @endif
 
                     <!-- Grid de Números -->
+                    @if (!$abstained)
                     <div class="mb-8">
                         <div class="mb-4 flex items-center justify-between">
                             <h3 class="text-lg font-bold text-gray-800">Escolha seus números</h3>
@@ -177,6 +188,15 @@
                             @endfor
                         </div>
                     </div>
+                    @else
+                    <div class="mb-8 rounded-2xl bg-gradient-to-r from-yellow-50 to-orange-50 p-6 text-center border-2 border-yellow-200">
+                        <svg class="h-12 w-12 text-yellow-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                        </svg>
+                        <p class="font-bold text-yellow-900 text-lg">Você escolheu se abster desta votação</p>
+                        <p class="text-sm text-yellow-800 mt-2">Nenhum número será selecionado para sua participação</p>
+                    </div>
+                    @endif
 
                     <hr class="my-8 border-gray-200">
 
@@ -202,6 +222,17 @@
                                 @error('phone')
                                     <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
                                 @enderror
+                            </div>
+
+                            <!-- Checkbox de Abstenção -->
+                            <div class="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" wire:model.live="abstained" class="h-5 w-5 rounded border-gray-300 text-yellow-600">
+                                    <div>
+                                        <p class="font-semibold text-yellow-900">Desejo me abster desta votação</p>
+                                        <p class="text-xs text-yellow-800">Se marcar esta opção, você não precisa escolher números</p>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -255,15 +286,21 @@
                         </span>
                     </button>
 
-                    @if (count($selectedNumbers) < $this->numbersToPickProperty && count($selectedNumbers) > 0)
+                    @if (!$abstained && count($selectedNumbers) < $this->numbersToPickProperty && count($selectedNumbers) > 0)
                         <p class="mt-4 text-center text-sm text-gray-500">
                             Selecione mais {{ $this->numbersToPickProperty - count($selectedNumbers) }} número(s)
                         </p>
                     @endif
 
-                    @if (count($selectedNumbers) === $this->numbersToPickProperty)
+                    @if (!$abstained && count($selectedNumbers) === $this->numbersToPickProperty)
                         <p class="mt-4 text-center text-sm font-medium text-green-600">
                             ✓ Você pode votar agora! O comprovante é opcional.
+                        </p>
+                    @endif
+
+                    @if ($abstained)
+                        <p class="mt-4 text-center text-sm font-medium text-yellow-600">
+                            ✓ Você pode registrar sua abstenção agora!
                         </p>
                     @endif
                 </div>

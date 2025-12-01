@@ -18,6 +18,7 @@ class CreateParticipant extends Component
     public array $selectedNumbers = [];
     public string $amount = '';
     public bool $paid = false;
+    public bool $abstained = false;
     public bool $modal = false;
 
     #[Computed]
@@ -51,13 +52,18 @@ class CreateParticipant extends Component
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'min:3', 'max:100'],
             'phone' => ['required', 'string', 'min:10'],
             'email' => ['nullable', 'email'],
-            'selectedNumbers' => ['required', 'array', 'size:' . $this->numbersToPickProperty],
             'amount' => ['required', 'numeric', 'min:0.01'],
         ];
+
+        if (!$this->abstained) {
+            $rules['selectedNumbers'] = ['required', 'array', 'size:' . $this->numbersToPickProperty];
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -72,6 +78,10 @@ class CreateParticipant extends Component
 
     public function toggleNumber(int $number): void
     {
+        if ($this->abstained) {
+            return;
+        }
+
         if (in_array($number, $this->selectedNumbers)) {
             $this->selectedNumbers = array_filter(
                 $this->selectedNumbers,
@@ -87,6 +97,10 @@ class CreateParticipant extends Component
 
     public function generateRandom(): void
     {
+        if ($this->abstained) {
+            return;
+        }
+
         $this->selectedNumbers = array_values(
             array_rand(
                 array_flip(range($this->minNumberProperty, $this->maxNumberProperty)),
@@ -113,14 +127,19 @@ class CreateParticipant extends Component
                 'email' => $this->email ?: null,
                 'phone' => $this->phone,
                 'access_code' => $accessCode,
-                'numbers' => $this->selectedNumbers,
+                'abstained' => $this->abstained,
+                'numbers' => $this->abstained ? [] : $this->selectedNumbers,
                 'amount' => (float) $this->amount,
                 'paid' => $this->paid,
                 'paid_at' => $this->paid ? now() : null,
             ]);
 
+            $message = $this->abstained 
+                ? '✅ Abstenção criada com sucesso!' 
+                : '✅ Votação criada com sucesso!';
+
             $this->toast()
-                ->success('✅ Votação criada com sucesso!')
+                ->success($message)
                 ->send();
 
             $this->resetForm();
@@ -135,7 +154,7 @@ class CreateParticipant extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['name', 'phone', 'email', 'selectedNumbers', 'amount', 'paid']);
+        $this->reset(['name', 'phone', 'email', 'selectedNumbers', 'amount', 'paid', 'abstained']);
         $this->amount = $this->defaultAmountProperty;
     }
 

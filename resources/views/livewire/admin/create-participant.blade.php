@@ -49,7 +49,16 @@
                         @enderror
                     </div>
 
+                    <!-- Checkbox de Abstenção -->
+                    <div class="flex items-center gap-3 rounded-lg bg-yellow-50 border-2 border-yellow-200 p-4">
+                        <input type="checkbox" wire:model.live="abstained" id="abstained" class="rounded">
+                        <label for="abstained" class="text-sm font-medium text-yellow-900">
+                            Registrar como abstenção
+                        </label>
+                    </div>
+
                     <!-- Números -->
+                    @if (!$abstained)
                     <div>
                         <div class="mb-4 flex items-center justify-between">
                             <label class="block text-sm font-semibold text-gray-700">
@@ -79,6 +88,15 @@
                             <span class="mt-2 text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
+                    @else
+                    <div class="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4 text-center">
+                        <svg class="h-8 w-8 text-yellow-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                        </svg>
+                        <p class="font-semibold text-yellow-900">Abstenção registrada</p>
+                        <p class="text-sm text-yellow-800">Nenhum número será selecionado</p>
+                    </div>
+                    @endif
 
                     <!-- Status de Pagamento -->
                     <div class="flex items-center gap-3 rounded-lg bg-blue-50 p-4">
@@ -97,7 +115,13 @@
                         <button type="submit"
                             class="megasena-gradient flex-1 rounded-lg py-3 font-semibold text-white transition-all hover:shadow-lg disabled:opacity-50"
                             wire:loading.attr="disabled">
-                            <span wire:loading.remove>✅ Criar Votação</span>
+                            <span wire:loading.remove>
+                                @if ($abstained)
+                                    ✖️ Registrar Abstenção
+                                @else
+                                    ✅ Criar Votação
+                                @endif
+                            </span>
                             <span wire:loading>Processando...</span>
                         </button>
                     </div>

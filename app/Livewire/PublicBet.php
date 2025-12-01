@@ -17,6 +17,7 @@ class PublicBet extends Component
     public string $phone = '';
     public array $selectedNumbers = [];
     public $paymentProof = null;
+    public bool $abstained = false;
 
     public bool $showSuccess = false;
     public string $accessCode = '';
@@ -48,6 +49,13 @@ class PublicBet extends Component
     {
         $numbersToPick = $this->numbersToPickProperty;
 
+        if ($this->abstained) {
+            return [
+                'name' => 'required|string|min:3|max:255',
+                'phone' => 'nullable|string|min:10|max:20',
+            ];
+        }
+
         return [
             'name' => 'required|string|min:3|max:255',
             'phone' => 'nullable|string|min:10|max:20',
@@ -59,7 +67,7 @@ class PublicBet extends Component
 
     public function toggleNumber(int $number): void
     {
-        if ($this->showSuccess) {
+        if ($this->showSuccess || $this->abstained) {
             return;
         }
 
@@ -82,7 +90,7 @@ class PublicBet extends Component
 
     public function generateRandom(): void
     {
-        if ($this->showSuccess) {
+        if ($this->showSuccess || $this->abstained) {
             return;
         }
 
@@ -125,17 +133,14 @@ class PublicBet extends Component
         try {
             $accessCode = Participant::generateAccessCode();
 
-            // Ordenar os números antes de salvar
-            $sortedNumbers = $this->selectedNumbers;
-            sort($sortedNumbers);
-
             $participantData = [
                 'name' => $this->name,
                 'email' => null,
                 'phone' => $this->phone ?: null,
                 'access_code' => $accessCode,
-                'numbers' => $sortedNumbers,
-                'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00), // Contribuição por pessoa
+                'abstained' => $this->abstained,
+                'numbers' => $this->abstained ? [] : $this->selectedNumbers,
+                'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00),
                 'paid' => false,
             ];
 
@@ -150,8 +155,12 @@ class PublicBet extends Component
             $this->accessCode = $accessCode;
             $this->showSuccess = true;
 
+            $message = $this->abstained 
+                ? '✅ Abstenção registrada com sucesso!' 
+                : '✅ Voto registrado com sucesso!';
+
             $this->toast()
-                ->success('✅ Voto registrado com sucesso!')
+                ->success($message)
                 ->send();
 
         } catch (\Exception $e) {
@@ -174,8 +183,8 @@ class PublicBet extends Component
     public function canSubmit(): bool
     {
         return !$this->showSuccess &&
-            count($this->selectedNumbers) === $this->numbersToPickProperty &&
-            !empty($this->name);
+            !empty($this->name) &&
+            ($this->abstained || count($this->selectedNumbers) === $this->numbersToPickProperty);
     }
 
     public function render()
