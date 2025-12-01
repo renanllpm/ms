@@ -94,6 +94,51 @@
                     </div>
                 </div>
 
+                <!-- Telefone (se não preenchido) -->
+                @if (!$participant->phone)
+                    <div class="border-t border-gray-200 pt-6">
+                        <h3 class="mb-4 text-lg font-semibold text-gray-800">Adicionar Telefone</h3>
+
+                        <div class="mb-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
+                            <p class="text-sm text-blue-800">
+                                ℹ️ Se você deseja receber sua votação via WhatsApp, adicione seu telefone aqui.
+                            </p>
+                        </div>
+
+                        <div wire:loading.remove>
+                            <div class="space-y-3">
+                                <div>
+                                    <input type="tel" wire:model="phone" placeholder="(11) 99999-9999"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
+                                    @error('phone')
+                                        <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                @if ($phone)
+                                    <button wire:click="updatePhone"
+                                        class="w-full transform rounded-lg bg-green-600 py-2 font-semibold text-white transition-all hover:scale-105 hover:bg-green-700"
+                                        wire:loading.attr="disabled">
+                                        <span wire:loading.remove>
+                                            📱 Adicionar Telefone
+                                        </span>
+                                        <span wire:loading>
+                                            Atualizando...
+                                        </span>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div wire:loading class="text-center">
+                            <div class="inline-block">
+                                <div class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600"></div>
+                            </div>
+                            <p class="mt-3 text-sm text-gray-600">Atualizando telefone...</p>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Comprovante de Pagamento -->
                 <div class="border-t border-gray-200 pt-6">
                     @if ($participant->payment_proof)

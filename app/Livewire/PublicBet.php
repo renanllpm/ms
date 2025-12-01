@@ -17,7 +17,7 @@ class PublicBet extends Component
     public string $phone = '';
     public array $selectedNumbers = [];
     public $paymentProof = null;
-    
+
     public bool $showSuccess = false;
     public string $accessCode = '';
 
@@ -47,7 +47,7 @@ class PublicBet extends Component
     public function rules(): array
     {
         $numbersToPick = $this->numbersToPickProperty;
-        
+
         return [
             'name' => 'required|string|min:3|max:255',
             'phone' => 'nullable|string|min:10|max:20',
@@ -64,7 +64,7 @@ class PublicBet extends Component
         }
 
         $index = array_search($number, $this->selectedNumbers);
-        
+
         if ($index !== false) {
             unset($this->selectedNumbers[$index]);
             $this->selectedNumbers = array_values($this->selectedNumbers);
@@ -90,16 +90,16 @@ class PublicBet extends Component
         $min = $this->minNumberProperty;
         $max = $this->maxNumberProperty;
         $count = $this->numbersToPickProperty;
-        
+
         while (count($this->selectedNumbers) < $count) {
             $num = rand($min, $max);
             if (!in_array($num, $this->selectedNumbers)) {
                 $this->selectedNumbers[] = $num;
             }
         }
-        
+
         sort($this->selectedNumbers);
-        
+
         $this->toast()
             ->info('Números gerados aleatoriamente!')
             ->send();
@@ -110,9 +110,9 @@ class PublicBet extends Component
         if ($this->showSuccess) {
             return;
         }
-        
+
         $this->selectedNumbers = [];
-        
+
         $this->toast()
             ->info('Seleção limpa!')
             ->send();
@@ -124,11 +124,11 @@ class PublicBet extends Component
 
         try {
             $accessCode = Participant::generateAccessCode();
-            
+
             // Ordenar os números antes de salvar
             $sortedNumbers = $this->selectedNumbers;
             sort($sortedNumbers);
-            
+
             $participantData = [
                 'name' => $this->name,
                 'email' => null,
@@ -149,7 +149,7 @@ class PublicBet extends Component
 
             $this->accessCode = $accessCode;
             $this->showSuccess = true;
-            
+
             $this->toast()
                 ->success('✅ Voto registrado com sucesso!')
                 ->send();
@@ -173,9 +173,9 @@ class PublicBet extends Component
 
     public function canSubmit(): bool
     {
-        return !$this->showSuccess && 
-               count($this->selectedNumbers) === $this->numbersToPickProperty &&
-               !empty($this->name);
+        return !$this->showSuccess &&
+            count($this->selectedNumbers) === $this->numbersToPickProperty &&
+            !empty($this->name);
     }
 
     public function render()

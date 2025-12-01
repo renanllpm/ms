@@ -17,6 +17,7 @@ class CheckBet extends Component
     public ?Participant $participant = null;
     public bool $searched = false;
     public $paymentProof = null;
+    public string $phone = '';
 
     public function rules(): array
     {
@@ -41,7 +42,47 @@ class CheckBet extends Component
 
     public function clear(): void
     {
-        $this->reset(['accessCode', 'participant', 'searched', 'paymentProof']);
+        $this->reset(['accessCode', 'participant', 'searched', 'paymentProof', 'phone']);
+    }
+
+    /**
+     * Atualiza o telefone do participante se ainda não estiver preenchido
+     */
+    public function updatePhone(): void
+    {
+        if (!$this->participant) {
+            $this->toast()
+                ->error('Participante não encontrado')
+                ->send();
+            return;
+        }
+
+        if ($this->participant->phone) {
+            $this->toast()
+                ->warning('Telefone já foi preenchido', 'Você já informou um telefone anteriormente.')
+                ->send();
+            return;
+        }
+
+        $this->validate([
+            'phone' => ['required', 'string', 'min:10', 'max:20'],
+        ], [
+            'phone.required' => 'Telefone é obrigatório',
+            'phone.min' => 'Telefone deve ter no mínimo 10 caracteres',
+            'phone.max' => 'Telefone deve ter no máximo 20 caracteres',
+        ]);
+
+        try {
+            $this->participant->update(['phone' => $this->phone]);
+            $this->phone = '';
+            $this->toast()
+                ->success('✅ Telefone atualizado com sucesso!')
+                ->send();
+        } catch (\Exception $e) {
+            $this->toast()
+                ->error('❌ Erro ao atualizar telefone. Tente novamente.')
+                ->send();
+        }
     }
 
     /**

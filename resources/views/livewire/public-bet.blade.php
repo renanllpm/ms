@@ -197,7 +197,8 @@
                                 <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
                                 <input type="tel" wire:model.live="phone" placeholder="(11) 99999-9999 (opcional)"
                                     class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
-                                <p class="mt-1 text-xs text-gray-500">Apenas se você quiser compartilhar via WhatsApp</p>
+                                <p class="mt-1 text-xs text-gray-500">Apenas se você quiser receber via WhatsApp
+                                </p>
                                 @error('phone')
                                     <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
                                 @enderror
