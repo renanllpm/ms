@@ -104,14 +104,22 @@
                                     {{ $participant->formatted_phone }}
                                 </td>
                                 <td class="px-4 py-3">
-                                    <div class="flex flex-wrap gap-1">
-                                        @foreach ($participant->sorted_numbers as $number)
-                                            <span
-                                                class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-                                                {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                    @if ($participant->abstained)
+                                        <div class="rounded-lg bg-yellow-100 px-3 py-2 text-center dark:bg-yellow-900">
+                                            <span class="text-sm font-semibold text-yellow-800 dark:text-yellow-200">
+                                                ✖️ Abstenção
                                             </span>
-                                        @endforeach
-                                    </div>
+                                        </div>
+                                    @else
+                                        <div class="flex flex-wrap gap-1">
+                                            @foreach ($participant->sorted_numbers as $number)
+                                                <span
+                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
+                                                    {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-3">
                                     <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
