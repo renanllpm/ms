@@ -183,13 +183,25 @@
                     <!-- Formulário de Dados -->
                     <div class="mb-8">
                         <h3 class="mb-6 text-lg font-bold text-gray-800">Seus Dados</h3>
-                        <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Nome Completo *</label>
-                            <input type="text" wire:model.live="name" placeholder="Digite seu nome completo"
-                                class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
-                            @error('name')
-                                <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
-                            @enderror
+                        <div class="space-y-4">
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">Nome Completo *</label>
+                                <input type="text" wire:model.live="name" placeholder="Digite seu nome completo"
+                                    class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
+                                @error('name')
+                                    <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
+                                <input type="tel" wire:model.live="phone" placeholder="(11) 99999-9999 (opcional)"
+                                    class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
+                                <p class="mt-1 text-xs text-gray-500">Apenas se você quiser compartilhar via WhatsApp</p>
+                                @error('phone')
+                                    <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 

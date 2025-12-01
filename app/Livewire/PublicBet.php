@@ -14,6 +14,7 @@ class PublicBet extends Component
     use WithFileUploads;
 
     public string $name = '';
+    public string $phone = '';
     public array $selectedNumbers = [];
     public $paymentProof = null;
     
@@ -49,6 +50,7 @@ class PublicBet extends Component
         
         return [
             'name' => 'required|string|min:3|max:255',
+            'phone' => 'nullable|string|min:10|max:20',
             'selectedNumbers' => "required|array|size:{$numbersToPick}",
             'selectedNumbers.*' => 'integer|min:' . $this->minNumberProperty . '|max:' . $this->maxNumberProperty . '|distinct',
             'paymentProof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:' . config('megasena.max_proof_size', 5120),
@@ -130,7 +132,7 @@ class PublicBet extends Component
             $participantData = [
                 'name' => $this->name,
                 'email' => null,
-                'phone' => null,
+                'phone' => $this->phone ?: null,
                 'access_code' => $accessCode,
                 'numbers' => $sortedNumbers,
                 'amount' => (float) \App\Models\Setting::get('default_bet_amount', 5.00), // Contribuição por pessoa
