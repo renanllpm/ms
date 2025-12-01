@@ -3,16 +3,20 @@
 namespace App\Livewire;
 
 use App\Models\Participant;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use TallStackUi\Traits\Interactions;
 
 class CheckBet extends Component
 {
     use Interactions;
+    use WithFileUploads;
 
     public ?string $accessCode = null;
     public ?Participant $participant = null;
     public bool $searched = false;
+    public $paymentProof = null;
 
     public function rules(): array
     {
@@ -37,7 +41,49 @@ class CheckBet extends Component
 
     public function clear(): void
     {
-        $this->reset(['accessCode', 'participant', 'searched']);
+        $this->reset(['accessCode', 'participant', 'searched', 'paymentProof']);
+    }
+
+    /**
+     * Envia o comprovante para um participante
+     */
+    public function uploadPaymentProof(): void
+    {
+        if (!$this->participant) {
+            $this->toast()
+                ->error('Participante não encontrado')
+                ->send();
+            return;
+        }
+
+        if ($this->participant->payment_proof) {
+            $this->toast()
+                ->warning('Comprovante já foi enviado', 'Você já enviou um comprovante anteriormente.')
+                ->send();
+            return;
+        }
+
+        $this->validate([
+            'paymentProof' => ['required', 'file', 'mimes:jpeg,png,pdf', 'max:5120'],
+        ], [
+            'paymentProof.required' => 'Selecione um arquivo',
+            'paymentProof.mimes' => 'O arquivo deve ser JPG, PNG ou PDF',
+            'paymentProof.max' => 'O arquivo não pode exceder 5MB',
+        ]);
+
+        try {
+            $path = $this->paymentProof->store('payment-proofs', 'public');
+            $this->participant->update(['payment_proof' => $path]);
+
+            $this->paymentProof = null;
+            $this->toast()
+                ->success('✅ Comprovante enviado com sucesso!')
+                ->send();
+        } catch (\Exception $e) {
+            $this->toast()
+                ->error('❌ Erro ao enviar comprovante. Tente novamente.')
+                ->send();
+        }
     }
 
     /**
