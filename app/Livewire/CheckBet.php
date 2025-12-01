@@ -126,7 +126,7 @@ class CheckBet extends Component
     {
         $mostChosenNumbers = $this->getMostChosenNumbers();
         $matchingNumbers = $this->getMatchingNumbers();
-        
+
         return view('livewire.check-bet', [
             'mostChosenNumbers' => $mostChosenNumbers,
             'matchingNumbers' => $matchingNumbers,
