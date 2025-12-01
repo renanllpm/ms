@@ -1,4 +1,8 @@
-<div>
+<div x-data="{ redirectUrl: null }" @redirect.window="window.open($event.detail.url, '_blank')">
+    <!-- Componente para Criar Nova Votação -->
+    <livewire:admin.create-participant wire:key="create-participant-{{ now()->timestamp }}"
+        @participantCreated="$wire.$refresh()" />
+
     <!-- Estatísticas Financeiras -->
     <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
         <x-card class="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
@@ -138,6 +142,9 @@
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-3">
                                     <div class="flex items-center gap-2">
+                                        <x-button.circle color="green" icon="share"
+                                            wire:click="shareViaWhatsApp({{ $participant->id }})"
+                                            x-tooltip="'Compartilhar via WhatsApp'" xs />
                                         <x-button.circle :color="$participant->paid ? 'red' : 'green'" :icon="$participant->paid ? 'x-circle' : 'check-circle'"
                                             wire:click="togglePaid({{ $participant->id }})"
                                             x-tooltip="'{{ $participant->paid ? 'Marcar como Não Pago' : 'Marcar como Pago' }}'"
