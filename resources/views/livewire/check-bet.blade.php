@@ -132,7 +132,9 @@
 
                         <div wire:loading class="text-center">
                             <div class="inline-block">
-                                <div class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600"></div>
+                                <div
+                                    class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600">
+                                </div>
                             </div>
                             <p class="mt-3 text-sm text-gray-600">Atualizando telefone...</p>
                         </div>
