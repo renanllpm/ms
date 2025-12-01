@@ -155,8 +155,8 @@ class PublicBet extends Component
             $this->accessCode = $accessCode;
             $this->showSuccess = true;
 
-            $message = $this->abstained 
-                ? '✅ Abstenção registrada com sucesso!' 
+            $message = $this->abstained
+                ? '✅ Abstenção registrada com sucesso!'
                 : '✅ Voto registrado com sucesso!';
 
             $this->toast()

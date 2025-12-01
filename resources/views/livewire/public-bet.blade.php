@@ -25,7 +25,8 @@
                     </h2>
                     <p class="mb-8 text-gray-600">
                         @if ($abstained)
-                            Sua abstenção foi registrada com sucesso. Os números votados pelos demais integrantes serão jogados!
+                            Sua abstenção foi registrada com sucesso. Os números votados pelos demais integrantes serão
+                            jogados!
                         @else
                             Seu voto foi registrado com sucesso. Os números mais votados serão jogados pelo grupo!
                         @endif
@@ -44,17 +45,17 @@
 
                     <!-- Números Escolhidos -->
                     @if (!$abstained && count($selectedNumbers) > 0)
-                    <div class="mb-8">
-                        <p class="mb-4 text-sm font-semibold text-gray-700">Seus Números Votados:</p>
-                        <div class="flex flex-wrap justify-center gap-3">
-                            @foreach ($selectedNumbers as $number)
-                                <div
-                                    class="megasena-ball selected flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
-                                    {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
-                                </div>
-                            @endforeach
+                        <div class="mb-8">
+                            <p class="mb-4 text-sm font-semibold text-gray-700">Seus Números Votados:</p>
+                            <div class="flex flex-wrap justify-center gap-3">
+                                @foreach ($selectedNumbers as $number)
+                                    <div
+                                        class="megasena-ball selected flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
+                                        {{ str_pad($number, 2, '0', STR_PAD_LEFT) }}
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
                     @endif
 
                     <!-- Informações -->
@@ -161,41 +162,45 @@
 
                     <!-- Grid de Números -->
                     @if (!$abstained)
-                    <div class="mb-8">
-                        <div class="mb-4 flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-gray-800">Escolha seus números</h3>
-                            <div class="flex gap-2">
-                                <button wire:click="generateRandom"
-                                    class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700"
-                                    wire:loading.attr="disabled">
-                                    🎲 Surpresinha
-                                </button>
-                                <button wire:click="clearSelection"
-                                    class="rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700"
-                                    wire:loading.attr="disabled">
-                                    ✖️ Limpar
-                                </button>
+                        <div class="mb-8">
+                            <div class="mb-4 flex items-center justify-between">
+                                <h3 class="text-lg font-bold text-gray-800">Escolha seus números</h3>
+                                <div class="flex gap-2">
+                                    <button wire:click="generateRandom"
+                                        class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700"
+                                        wire:loading.attr="disabled">
+                                        🎲 Surpresinha
+                                    </button>
+                                    <button wire:click="clearSelection"
+                                        class="rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700"
+                                        wire:loading.attr="disabled">
+                                        ✖️ Limpar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid-cols-15 grid gap-4">
+                                @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
+                                    <button type="button" wire:click="toggleNumber({{ $i }})"
+                                        class="megasena-ball {{ $this->isSelected($i) ? 'selected' : '' }} flex aspect-square w-full items-center justify-center rounded-full text-sm font-bold text-white shadow-md md:text-lg"
+                                        wire:loading.attr="disabled">
+                                        {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                    </button>
+                                @endfor
                             </div>
                         </div>
-
-                        <div class="grid-cols-15 grid gap-4">
-                            @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
-                                <button type="button" wire:click="toggleNumber({{ $i }})"
-                                    class="megasena-ball {{ $this->isSelected($i) ? 'selected' : '' }} flex aspect-square w-full items-center justify-center rounded-full text-sm font-bold text-white shadow-md md:text-lg"
-                                    wire:loading.attr="disabled">
-                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
-                                </button>
-                            @endfor
-                        </div>
-                    </div>
                     @else
-                    <div class="mb-8 rounded-2xl bg-gradient-to-r from-yellow-50 to-orange-50 p-6 text-center border-2 border-yellow-200">
-                        <svg class="h-12 w-12 text-yellow-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
-                        </svg>
-                        <p class="font-bold text-yellow-900 text-lg">Você escolheu se abster desta votação</p>
-                        <p class="text-sm text-yellow-800 mt-2">Nenhum número será selecionado para sua participação</p>
-                    </div>
+                        <div
+                            class="mb-8 rounded-2xl border-2 border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 p-6 text-center">
+                            <svg class="mx-auto mb-3 h-12 w-12 text-yellow-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                            </svg>
+                            <p class="text-lg font-bold text-yellow-900">Você escolheu se abster desta votação</p>
+                            <p class="mt-2 text-sm text-yellow-800">Nenhum número será selecionado para sua participação
+                            </p>
+                        </div>
                     @endif
 
                     <hr class="my-8 border-gray-200">
@@ -215,7 +220,8 @@
 
                             <div>
                                 <label class="mb-2 block text-sm font-medium text-gray-700">Telefone</label>
-                                <input type="tel" wire:model.live="phone" placeholder="(11) 99999-9999 (opcional)"
+                                <input type="tel" wire:model.live="phone"
+                                    placeholder="(11) 99999-9999 (opcional)"
                                     class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
                                 <p class="mt-1 text-xs text-gray-500">Apenas se você quiser receber via WhatsApp
                                 </p>
@@ -226,11 +232,13 @@
 
                             <!-- Checkbox de Abstenção -->
                             <div class="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4">
-                                <label class="flex items-center gap-3 cursor-pointer">
-                                    <input type="checkbox" wire:model.live="abstained" class="h-5 w-5 rounded border-gray-300 text-yellow-600">
+                                <label class="flex cursor-pointer items-center gap-3">
+                                    <input type="checkbox" wire:model.live="abstained"
+                                        class="h-5 w-5 rounded border-gray-300 text-yellow-600">
                                     <div>
                                         <p class="font-semibold text-yellow-900">Desejo me abster desta votação</p>
-                                        <p class="text-xs text-yellow-800">Se marcar esta opção, você não precisa escolher números</p>
+                                        <p class="text-xs text-yellow-800">Se marcar esta opção, você não precisa
+                                            escolher números</p>
                                     </div>
                                 </label>
                             </div>

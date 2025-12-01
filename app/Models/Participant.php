@@ -62,17 +62,18 @@ class Participant extends Model
         if (!$this->phone) {
             return '';
         }
-        
+
         $phone = preg_replace('/\D/', '', $this->phone);
-        
+
         if (strlen($phone) === 11) {
-            return sprintf('(%s) %s-%s', 
+            return sprintf(
+                '(%s) %s-%s',
                 substr($phone, 0, 2),
                 substr($phone, 2, 5),
                 substr($phone, 7)
             );
         }
-        
+
         return $this->phone;
     }
 

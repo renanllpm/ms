@@ -50,7 +50,7 @@
                     </div>
 
                     <!-- Checkbox de Abstenção -->
-                    <div class="flex items-center gap-3 rounded-lg bg-yellow-50 border-2 border-yellow-200 p-4">
+                    <div class="flex items-center gap-3 rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4">
                         <input type="checkbox" wire:model.live="abstained" id="abstained" class="rounded">
                         <label for="abstained" class="text-sm font-medium text-yellow-900">
                             Registrar como abstenção
@@ -59,43 +59,45 @@
 
                     <!-- Números -->
                     @if (!$abstained)
-                    <div>
-                        <div class="mb-4 flex items-center justify-between">
-                            <label class="block text-sm font-semibold text-gray-700">
-                                Escolha {{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }} números *
-                            </label>
-                            <div class="flex gap-2">
-                                <button type="button" wire:click="generateRandom"
-                                    class="rounded-lg bg-purple-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-purple-700">
-                                    🎲 Surpresinha
-                                </button>
-                                <button type="button" wire:click="clearSelection"
-                                    class="rounded-lg bg-gray-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-gray-700">
-                                    ✖️ Limpar
-                                </button>
+                        <div>
+                            <div class="mb-4 flex items-center justify-between">
+                                <label class="block text-sm font-semibold text-gray-700">
+                                    Escolha {{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }} números *
+                                </label>
+                                <div class="flex gap-2">
+                                    <button type="button" wire:click="generateRandom"
+                                        class="rounded-lg bg-purple-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-purple-700">
+                                        🎲 Surpresinha
+                                    </button>
+                                    <button type="button" wire:click="clearSelection"
+                                        class="rounded-lg bg-gray-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-gray-700">
+                                        ✖️ Limpar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="grid grid-cols-6 gap-2 md:grid-cols-10">
-                            @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
-                                <button type="button" wire:click="toggleNumber({{ $i }})"
-                                    class="{{ $this->isSelected($i) ? 'megasena-gradient text-white shadow-lg' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
-                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
-                                </button>
-                            @endfor
+                            <div class="grid grid-cols-6 gap-2 md:grid-cols-10">
+                                @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
+                                    <button type="button" wire:click="toggleNumber({{ $i }})"
+                                        class="{{ $this->isSelected($i) ? 'megasena-gradient text-white shadow-lg' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
+                                        {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                    </button>
+                                @endfor
+                            </div>
+                            @error('selectedNumbers')
+                                <span class="mt-2 text-xs text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
-                        @error('selectedNumbers')
-                            <span class="mt-2 text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
                     @else
-                    <div class="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4 text-center">
-                        <svg class="h-8 w-8 text-yellow-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
-                        </svg>
-                        <p class="font-semibold text-yellow-900">Abstenção registrada</p>
-                        <p class="text-sm text-yellow-800">Nenhum número será selecionado</p>
-                    </div>
+                        <div class="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4 text-center">
+                            <svg class="mx-auto mb-2 h-8 w-8 text-yellow-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                            </svg>
+                            <p class="font-semibold text-yellow-900">Abstenção registrada</p>
+                            <p class="text-sm text-yellow-800">Nenhum número será selecionado</p>
+                        </div>
                     @endif
 
                     <!-- Status de Pagamento -->

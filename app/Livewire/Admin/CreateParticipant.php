@@ -134,8 +134,8 @@ class CreateParticipant extends Component
                 'paid_at' => $this->paid ? now() : null,
             ]);
 
-            $message = $this->abstained 
-                ? '✅ Abstenção criada com sucesso!' 
+            $message = $this->abstained
+                ? '✅ Abstenção criada com sucesso!'
                 : '✅ Votação criada com sucesso!';
 
             $this->toast()

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Participant;
+use App\Models\Setting;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,6 +19,26 @@ class CheckBet extends Component
     public bool $searched = false;
     public $paymentProof = null;
     public string $phone = '';
+    public array $selectedNumbers = [];
+    public bool $editingNumbers = false;
+
+    #[Computed]
+    public function numbersToPickProperty(): int
+    {
+        return (int) Setting::get('numbers_to_pick', 6);
+    }
+
+    #[Computed]
+    public function minNumberProperty(): int
+    {
+        return (int) Setting::get('min_number', 1);
+    }
+
+    #[Computed]
+    public function maxNumberProperty(): int
+    {
+        return (int) Setting::get('max_number', 60);
+    }
 
     public function rules(): array
     {
@@ -33,6 +54,10 @@ class CheckBet extends Component
         $this->participant = Participant::where('access_code', strtoupper($this->accessCode))->first();
         $this->searched = true;
 
+        if ($this->participant) {
+            $this->selectedNumbers = $this->participant->numbers;
+        }
+
         if (!$this->participant) {
             $this->toast()
                 ->error('Código não encontrado', 'Verifique se digitou corretamente.')
@@ -42,7 +67,7 @@ class CheckBet extends Component
 
     public function clear(): void
     {
-        $this->reset(['accessCode', 'participant', 'searched', 'paymentProof', 'phone']);
+        $this->reset(['accessCode', 'participant', 'searched', 'paymentProof', 'phone', 'selectedNumbers', 'editingNumbers']);
     }
 
     /**
@@ -125,6 +150,90 @@ class CheckBet extends Component
                 ->error('❌ Erro ao enviar comprovante. Tente novamente.')
                 ->send();
         }
+    }
+
+    /**
+     * Inicia edição de números
+     */
+    public function startEditingNumbers(): void
+    {
+        if (!$this->participant || !$this->participant->abstained) {
+            return;
+        }
+
+        $this->editingNumbers = true;
+        $this->selectedNumbers = [];
+    }
+
+    /**
+     * Toggle número na edição
+     */
+    public function toggleNumberEdit(int $number): void
+    {
+        if (!$this->editingNumbers) {
+            return;
+        }
+
+        $index = array_search($number, $this->selectedNumbers);
+
+        if ($index !== false) {
+            unset($this->selectedNumbers[$index]);
+            $this->selectedNumbers = array_values($this->selectedNumbers);
+        } else {
+            if (count($this->selectedNumbers) < $this->numbersToPickProperty) {
+                $this->selectedNumbers[] = $number;
+                sort($this->selectedNumbers);
+            } else {
+                $this->toast()
+                    ->warning("Você já selecionou {$this->numbersToPickProperty} números!")
+                    ->send();
+            }
+        }
+    }
+
+    /**
+     * Salvar números escolhidos
+     */
+    public function saveNumbers(): void
+    {
+        if (!$this->participant || !$this->editingNumbers) {
+            $this->toast()
+                ->error('Erro ao salvar números')
+                ->send();
+            return;
+        }
+
+        if (count($this->selectedNumbers) !== $this->numbersToPickProperty) {
+            $this->toast()
+                ->warning("Selecione exatamente {$this->numbersToPickProperty} números")
+                ->send();
+            return;
+        }
+
+        try {
+            $this->participant->update([
+                'numbers' => $this->selectedNumbers,
+                'abstained' => false,
+            ]);
+
+            $this->editingNumbers = false;
+            $this->toast()
+                ->success('✅ Números salvos com sucesso!')
+                ->send();
+        } catch (\Exception $e) {
+            $this->toast()
+                ->error('❌ Erro ao salvar números. Tente novamente.')
+                ->send();
+        }
+    }
+
+    /**
+     * Cancelar edição de números
+     */
+    public function cancelEditNumbers(): void
+    {
+        $this->editingNumbers = false;
+        $this->selectedNumbers = $this->participant->numbers;
     }
 
     /**

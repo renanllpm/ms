@@ -234,9 +234,71 @@
                     @endif
                 </div>
 
+                <!-- Seção de Abstenção -->
+                @if ($participant->abstained)
+                    <div class="border-t border-gray-200 pt-6">
+                        <div class="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-6">
+                            <div class="mb-4 flex items-start gap-4">
+                                <svg class="h-8 w-8 flex-shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                                </svg>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-semibold text-yellow-900">Você se absteve desta votação</h3>
+                                    <p class="mt-1 text-sm text-yellow-800">Você pode escolher seus números agora se mudar de ideia</p>
+                                </div>
+                            </div>
+
+                            @if (!$editingNumbers)
+                                <button wire:click="startEditingNumbers"
+                                    class="w-full rounded-lg bg-yellow-600 px-4 py-2 font-semibold text-white transition-all hover:bg-yellow-700">
+                                    📝 Escolher Números Agora
+                                </button>
+                            @else
+                                <div class="mt-4 space-y-4">
+                                    <div>
+                                        <p class="mb-3 text-sm font-semibold text-yellow-900">
+                                            Selecione {{ $this->numbersToPickProperty }} números ({{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}):
+                                        </p>
+                                        <div class="grid grid-cols-6 gap-2">
+                                            @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
+                                                <button type="button" wire:click="toggleNumberEdit({{ $i }})"
+                                                    class="{{ in_array($i, $selectedNumbers) ? 'bg-yellow-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
+                                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                                </button>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-2">
+                                        <button wire:click="cancelEditNumbers"
+                                            class="flex-1 rounded-lg bg-gray-300 px-4 py-2 font-semibold text-gray-800 transition-all hover:bg-gray-400">
+                                            Cancelar
+                                        </button>
+                                        <button wire:click="saveNumbers"
+                                            class="flex-1 rounded-lg bg-green-600 px-4 py-2 font-semibold text-white transition-all hover:bg-green-700"
+                                            wire:loading.attr="disabled"
+                                            :disabled="count($selectedNumbers) !== {{ $this->numbersToPickProperty }}">
+                                            <span wire:loading.remove>💾 Salvar Números</span>
+                                            <span wire:loading>Salvando...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Números Escolhidos -->
+                @if (!$editingNumbers)
                 <div>
-                    <h3 class="mb-4 text-lg font-semibold text-gray-700">Seus números votados:</h3>
+                    <h3 class="mb-4 text-lg font-semibold text-gray-700">
+                        @if ($participant->abstained)
+                            Seu status: Abstenção (sem números)
+                        @else
+                            Seus números votados:
+                        @endif
+                    </h3>
+                    @if (!$participant->abstained && count($participant->sorted_numbers) > 0)
                     <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
                         @foreach ($participant->sorted_numbers as $number)
                             @php
@@ -278,7 +340,9 @@
                             </div>
                         </div>
                     @endif
+                    @endif
                 </div>
+                @endif
 
                 <!-- Números Mais Escolhidos -->
                 @if (count($mostChosenNumbers) > 0)
