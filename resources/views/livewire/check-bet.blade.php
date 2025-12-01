@@ -116,9 +116,8 @@
                                 </div>
 
                                 <button wire:click="updatePhone"
-                                    class="w-full transform rounded-lg bg-green-600 py-2 font-semibold text-white transition-all hover:scale-105 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    wire:loading.attr="disabled"
-                                    :disabled="!phone">
+                                    class="w-full transform rounded-lg bg-green-600 py-2 font-semibold text-white transition-all hover:scale-105 hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    wire:loading.attr="disabled" :disabled="!phone">
                                     <span wire:loading.remove>
                                         📱 Adicionar Telefone
                                     </span>
