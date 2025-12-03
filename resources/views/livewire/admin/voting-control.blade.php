@@ -57,5 +57,55 @@
                 dados da votação.
             </p>
         </div>
+
+        <div class="mt-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-4 dark:bg-green-900/20">
+            <p class="text-sm text-green-700 dark:text-green-200">
+                📲 <strong>Mensagem para WhatsApp:</strong> A mensagem abaixo foi gerada automaticamente para você
+                compartilhar com o grupo do WhatsApp.
+            </p>
+        </div>
+        <div x-data="{ copied: false }"
+            class="mt-6 max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
+            <button
+                x-on:click="
+            navigator.clipboard.writeText($refs.messagePreview.textContent);
+            copied = true;
+            setTimeout(() => copied = false, 2000);
+        "
+                class="mb-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 font-semibold text-white transition-colors"
+                :class="copied ? 'bg-green-600 hover:bg-green-700' :
+                    'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600'">
+                <svg x-show="!copied" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <svg x-show="copied" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span x-text="copied ? 'Copiado!' : 'Copiar Mensagem'"></span>
+            </button>
+            <p class="whitespace-pre-wrap font-mono text-sm text-gray-800 dark:text-gray-200" x-ref="messagePreview">
+                {{ $messagePreview }}
+            </p>
+        </div>
     @endif
+
+</div>
+
+
+
+<script>
+    document.addEventListener('livewire:navigated', function() {
+        Livewire.on('copy-whatsapp-message', ({
+            message
+        }) => {
+            // Copia a mensagem para a área de transferência
+            navigator.clipboard.writeText(message).then(() => {
+                console.log('Mensagem copiada com sucesso!');
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+            });
+        });
+    });
+</script>
 </div>
