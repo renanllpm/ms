@@ -60,6 +60,24 @@
         <!-- Resultado -->
         @if ($searched && $participant)
             <div class="animate-fadeIn space-y-6 rounded-3xl bg-white p-8 shadow-2xl">
+                <!-- Status de Votação -->
+                @if (!$this->isVotingOpen)
+                    <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-4 dark:bg-red-900/20">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <div>
+                                <p class="font-semibold text-red-700 dark:text-red-200">🔒 Votação Encerrada</p>
+                                <p class="text-sm text-red-600 dark:text-red-300">A votação foi encerrada. Você pode
+                                    consultar seus dados, mas não pode fazer alterações.</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Status de Pagamento -->
                 <div class="flex items-center justify-between border-b border-gray-200 pb-6">
                     <div>
@@ -95,131 +113,38 @@
                 </div>
 
                 <!-- Telefone (se não preenchido) -->
-                @if (!$participant->phone)
-                    <div class="border-t border-gray-200 pt-6">
-                        <h3 class="mb-4 text-lg font-semibold text-gray-800">Adicionar Telefone</h3>
-
-                        <div class="mb-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
-                            <p class="text-sm text-blue-800">
-                                ℹ️ Se você deseja receber sua votação via WhatsApp, adicione seu telefone aqui.
-                            </p>
-                        </div>
-
-                        <div wire:loading.remove>
-                            <div class="space-y-3">
-                                <div>
-                                    <input type="tel" wire:model="phone" placeholder="(11) 99999-9999"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
-                                    @error('phone')
-                                        <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <button wire:click="updatePhone"
-                                    class="w-full transform rounded-lg bg-green-600 py-2 font-semibold text-white transition-all hover:scale-105 hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                    wire:loading.attr="disabled" :disabled="!phone">
-                                    <span wire:loading.remove>
-                                        📱 Adicionar Telefone
-                                    </span>
-                                    <span wire:loading>
-                                        Atualizando...
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div wire:loading class="text-center">
-                            <div class="inline-block">
-                                <div
-                                    class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600">
-                                </div>
-                            </div>
-                            <p class="mt-3 text-sm text-gray-600">Atualizando telefone...</p>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Comprovante de Pagamento -->
-                <div class="border-t border-gray-200 pt-6">
-                    @if ($participant->payment_proof)
-                        <div class="mb-4 rounded-xl border-2 border-green-200 bg-green-50 p-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <svg class="h-6 w-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                        <path
-                                            d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
-                                    </svg>
-                                    <div>
-                                        <p class="text-sm font-semibold text-green-800">✓ Comprovante enviado</p>
-                                        <p class="text-xs text-green-700">Seu comprovante foi recebido com sucesso</p>
-                                    </div>
-                                </div>
-                                <a href="{{ Storage::url($participant->payment_proof) }}" target="_blank"
-                                    class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                    Ver comprovante
-                                </a>
-                            </div>
-                        </div>
-                    @else
-                        <div class="mb-6">
-                            <h3 class="mb-4 flex items-center justify-between text-lg font-semibold text-gray-800">
-                                <span class="flex items-center gap-2">
-                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    Comprovante de Contribuição
-                                </span>
-                                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600">
-                                    Opcional
-                                </span>
-                            </h3>
+                @if ($this->isVotingOpen)
+                    @if (!$participant->phone)
+                        <div class="border-t border-gray-200 pt-6">
+                            <h3 class="mb-4 text-lg font-semibold text-gray-800">Adicionar Telefone</h3>
 
                             <div class="mb-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
                                 <p class="text-sm text-blue-800">
-                                    ℹ️ Se você esqueceu de enviar seu comprovante, você pode enviá-lo aqui. O envio é
-                                    opcional mas ajuda na organização.
+                                    ℹ️ Se você deseja receber sua votação via WhatsApp, adicione seu telefone aqui.
                                 </p>
                             </div>
 
                             <div wire:loading.remove>
-                                <div
-                                    class="rounded-xl border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-green-500">
-                                    <input type="file" wire:model="paymentProof" accept="image/*,.pdf" class="hidden"
-                                        id="fileUpload">
-                                    <label for="fileUpload" class="cursor-pointer">
-                                        <div class="mb-3 text-4xl">📎</div>
-                                        <p class="mb-2 text-gray-600">Clique para enviar o comprovante</p>
-                                        <p class="text-xs text-gray-500">JPG, PNG ou PDF (Máx: 5MB)</p>
-                                    </label>
-                                    @if ($paymentProof)
-                                        <p class="mt-3 text-sm font-medium text-green-600">✓ Arquivo selecionado:
-                                            {{ $paymentProof->getClientOriginalName() }}</p>
-                                    @endif
-                                </div>
-                                @error('paymentProof')
-                                    <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
-                                @enderror
+                                <div class="space-y-3">
+                                    <div>
+                                        <input type="tel" wire:model="phone" placeholder="(11) 99999-9999"
+                                            class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-green-500">
+                                        @error('phone')
+                                            <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                                @if ($paymentProof)
-                                    <button wire:click="uploadPaymentProof"
-                                        class="megasena-gradient mt-4 w-full transform rounded-xl py-3 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-xl"
-                                        wire:loading.attr="disabled">
+                                    <button wire:click="updatePhone"
+                                        class="w-full transform rounded-lg bg-green-600 py-2 font-semibold text-white transition-all hover:scale-105 hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                        wire:loading.attr="disabled" :disabled="!phone">
                                         <span wire:loading.remove>
-                                            📤 Enviar Comprovante
+                                            📱 Adicionar Telefone
                                         </span>
                                         <span wire:loading>
-                                            Enviando...
+                                            Atualizando...
                                         </span>
                                     </button>
-                                @endif
+                                </div>
                             </div>
 
                             <div wire:loading class="text-center">
@@ -228,70 +153,168 @@
                                         class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600">
                                     </div>
                                 </div>
-                                <p class="mt-3 text-sm text-gray-600">Enviando seu comprovante...</p>
+                                <p class="mt-3 text-sm text-gray-600">Atualizando telefone...</p>
                             </div>
                         </div>
                     @endif
-                </div>
 
-                <!-- Seção de Abstenção -->
-                @if ($participant->abstained)
+                    <!-- Comprovante de Pagamento -->
                     <div class="border-t border-gray-200 pt-6">
-                        <div class="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-6">
-                            <div class="mb-4 flex items-start gap-4">
-                                <svg class="h-8 w-8 flex-shrink-0 text-yellow-600" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
-                                </svg>
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-semibold text-yellow-900">Você se absteve desta votação
-                                    </h3>
-                                    <p class="mt-1 text-sm text-yellow-800">Você pode escolher seus números agora se
-                                        mudar de ideia</p>
-                                </div>
-                            </div>
-
-                            @if (!$editingNumbers)
-                                <button wire:click="startEditingNumbers"
-                                    class="w-full rounded-lg bg-yellow-600 px-4 py-2 font-semibold text-white transition-all hover:bg-yellow-700">
-                                    📝 Escolher Números Agora
-                                </button>
-                            @else
-                                <div class="mt-4 space-y-4">
-                                    <div>
-                                        <p class="mb-3 text-sm font-semibold text-yellow-900">
-                                            Selecione {{ $this->numbersToPickProperty }} números
-                                            ({{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}):
-                                        </p>
-                                        <div class="grid grid-cols-6 gap-2">
-                                            @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
-                                                <button type="button"
-                                                    wire:click="toggleNumberEdit({{ $i }})"
-                                                    class="{{ in_array($i, $selectedNumbers) ? 'bg-yellow-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
-                                                    {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
-                                                </button>
-                                            @endfor
+                        @if ($participant->payment_proof)
+                            <div class="mb-4 rounded-xl border-2 border-green-200 bg-green-50 p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <svg class="h-6 w-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                            <path
+                                                d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                                        </svg>
+                                        <div>
+                                            <p class="text-sm font-semibold text-green-800">✓ Comprovante enviado</p>
+                                            <p class="text-xs text-green-700">Seu comprovante foi recebido com sucesso
+                                            </p>
                                         </div>
                                     </div>
+                                    <a href="{{ Storage::url($participant->payment_proof) }}" target="_blank"
+                                        class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        Ver comprovante
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="mb-6">
+                                <h3 class="mb-4 flex items-center justify-between text-lg font-semibold text-gray-800">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Comprovante de Contribuição
+                                    </span>
+                                    <span
+                                        class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600">
+                                        Opcional
+                                    </span>
+                                </h3>
 
-                                    <div class="flex gap-2">
-                                        <button wire:click="cancelEditNumbers"
-                                            class="flex-1 rounded-lg bg-gray-300 px-4 py-2 font-semibold text-gray-800 transition-all hover:bg-gray-400">
-                                            Cancelar
+                                <div class="mb-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
+                                    <p class="text-sm text-blue-800">
+                                        ℹ️ Se você esqueceu de enviar seu comprovante, você pode enviá-lo aqui. O envio
+                                        é
+                                        opcional mas ajuda na organização.
+                                    </p>
+                                </div>
+
+                                <div wire:loading.remove>
+                                    <div
+                                        class="rounded-xl border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-green-500">
+                                        <input type="file" wire:model="paymentProof" accept="image/*,.pdf"
+                                            class="hidden" id="fileUpload">
+                                        <label for="fileUpload" class="cursor-pointer">
+                                            <div class="mb-3 text-4xl">📎</div>
+                                            <p class="mb-2 text-gray-600">Clique para enviar o comprovante</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG ou PDF (Máx: 5MB)</p>
+                                        </label>
+                                        @if ($paymentProof)
+                                            <p class="mt-3 text-sm font-medium text-green-600">✓ Arquivo selecionado:
+                                                {{ $paymentProof->getClientOriginalName() }}</p>
+                                        @endif
+                                    </div>
+                                    @error('paymentProof')
+                                        <span class="mt-1 text-xs text-red-500">{{ $message }}</span>
+                                    @enderror
+
+                                    @if ($paymentProof)
+                                        <button wire:click="uploadPaymentProof"
+                                            class="megasena-gradient mt-4 w-full transform rounded-xl py-3 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-xl"
+                                            wire:loading.attr="disabled">
+                                            <span wire:loading.remove>
+                                                📤 Enviar Comprovante
+                                            </span>
+                                            <span wire:loading>
+                                                Enviando...
+                                            </span>
                                         </button>
-                                        <button wire:click="saveNumbers"
-                                            class="flex-1 rounded-lg bg-green-600 px-4 py-2 font-semibold text-white transition-all hover:bg-green-700"
-                                            wire:loading.attr="disabled"
-                                            :disabled="count($selectedNumbers) !== {{ $this->numbersToPickProperty }}">
-                                            <span wire:loading.remove>💾 Salvar Números</span>
-                                            <span wire:loading>Salvando...</span>
-                                        </button>
+                                    @endif
+                                </div>
+
+                                <div wire:loading class="text-center">
+                                    <div class="inline-block">
+                                        <div
+                                            class="h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600">
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-sm text-gray-600">Enviando seu comprovante...</p>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <!-- Seção de Abstenção -->
+                    @if ($participant->abstained)
+                        <div class="border-t border-gray-200 pt-6">
+                            <div class="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-6">
+                                <div class="mb-4 flex items-start gap-4">
+                                    <svg class="h-8 w-8 flex-shrink-0 text-yellow-600" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4v2m0 4v2M4.22 4.22a9 9 0 1112.56 12.56M4.22 4.22a9 9 0 0012.56 12.56" />
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h3 class="text-lg font-semibold text-yellow-900">Você se absteve desta votação
+                                        </h3>
+                                        <p class="mt-1 text-sm text-yellow-800">Você pode escolher seus números agora
+                                            se
+                                            mudar de ideia</p>
                                     </div>
                                 </div>
-                            @endif
+
+                                @if (!$editingNumbers)
+                                    <button wire:click="startEditingNumbers"
+                                        class="w-full rounded-lg bg-yellow-600 px-4 py-2 font-semibold text-white transition-all hover:bg-yellow-700">
+                                        📝 Escolher Números Agora
+                                    </button>
+                                @else
+                                    <div class="mt-4 space-y-4">
+                                        <div>
+                                            <p class="mb-3 text-sm font-semibold text-yellow-900">
+                                                Selecione {{ $this->numbersToPickProperty }} números
+                                                ({{ count($selectedNumbers) }}/{{ $this->numbersToPickProperty }}):
+                                            </p>
+                                            <div class="grid grid-cols-6 gap-2">
+                                                @for ($i = $this->minNumberProperty; $i <= $this->maxNumberProperty; $i++)
+                                                    <button type="button"
+                                                        wire:click="toggleNumberEdit({{ $i }})"
+                                                        class="{{ in_array($i, $selectedNumbers) ? 'bg-yellow-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }} flex aspect-square items-center justify-center rounded-lg font-bold transition-all">
+                                                        {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
+                                                    </button>
+                                                @endfor
+                                            </div>
+                                        </div>
+
+                                        <div class="flex gap-2">
+                                            <button wire:click="cancelEditNumbers"
+                                                class="flex-1 rounded-lg bg-gray-300 px-4 py-2 font-semibold text-gray-800 transition-all hover:bg-gray-400">
+                                                Cancelar
+                                            </button>
+                                            <button wire:click="saveNumbers"
+                                                class="flex-1 rounded-lg bg-green-600 px-4 py-2 font-semibold text-white transition-all hover:bg-green-700"
+                                                wire:loading.attr="disabled"
+                                                :disabled="count($selectedNumbers) !== {{ $this->numbersToPickProperty }}">
+                                                <span wire:loading.remove>💾 Salvar Números</span>
+                                                <span wire:loading>Salvando...</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
 
                 <!-- Números Escolhidos -->

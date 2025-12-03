@@ -53,6 +53,9 @@
                 </x-card>
             </div>
 
+            <!-- Controle de Votação -->
+            <livewire:admin.voting-control />
+
             <!-- Informações -->
             <x-card title="ℹ️ Como Funciona">
                 <div class="space-y-4 text-gray-700 dark:text-gray-300">

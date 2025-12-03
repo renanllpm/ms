@@ -45,6 +45,12 @@ class PublicBet extends Component
         return (int) \App\Models\Setting::get('max_number', 60);
     }
 
+    #[Computed]
+    public function isVotingOpen(): bool
+    {
+        return \App\Models\Setting::get('voting_status', 'open') === 'open';
+    }
+
     public function rules(): array
     {
         $numbersToPick = $this->numbersToPickProperty;
@@ -128,6 +134,13 @@ class PublicBet extends Component
 
     public function submitBet(): void
     {
+        if (!$this->isVotingOpen) {
+            $this->toast()
+                ->error('❌ Votação encerrada', 'Não é mais possível votar. Você pode consultar os dados da votação.')
+                ->send();
+            return;
+        }
+
         $this->validate();
 
         try {

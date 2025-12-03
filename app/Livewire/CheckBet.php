@@ -40,6 +40,12 @@ class CheckBet extends Component
         return (int) Setting::get('max_number', 60);
     }
 
+    #[Computed]
+    public function isVotingOpen(): bool
+    {
+        return Setting::get('voting_status', 'open') === 'open';
+    }
+
     public function rules(): array
     {
         return [
@@ -157,6 +163,13 @@ class CheckBet extends Component
      */
     public function startEditingNumbers(): void
     {
+        if (!$this->isVotingOpen) {
+            $this->toast()
+                ->error('❌ Votação encerrada', 'Você não pode mais alterar sua votação.')
+                ->send();
+            return;
+        }
+
         if (!$this->participant || !$this->participant->abstained) {
             return;
         }
